@@ -9,26 +9,34 @@
 /* Begin PBXBuildFile section */
 		28E3361AC4833E92B700318F /* Pods_OpenIDConnectSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4F2115040DA5DDAA9217F3D /* Pods_OpenIDConnectSwift.framework */; };
 		710124B31D11BCD9009F420A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710124B21D11BCD9009F420A /* AppDelegate.swift */; };
-		710124B51D11BCD9009F420A /* OktaAppAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710124B41D11BCD9009F420A /* OktaAppAuth.swift */; };
 		710124B81D11BCD9009F420A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 710124B61D11BCD9009F420A /* Main.storyboard */; };
 		710124BA1D11BCD9009F420A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 710124B91D11BCD9009F420A /* Assets.xcassets */; };
 		710124BD1D11BCD9009F420A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 710124BB1D11BCD9009F420A /* LaunchScreen.storyboard */; };
 		710124C61D11DBD8009F420A /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710124C51D11DBD8009F420A /* Models.swift */; };
-		71724C261D189D2F00077380 /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71724C251D189D2F00077380 /* ImageViewController.swift */; };
+		7111E45E1D53C32100DF5B02 /* AppointmentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7111E45D1D53C32100DF5B02 /* AppointmentsViewController.swift */; };
+		7111E4601D53E74400DF5B02 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7111E45F1D53E74400DF5B02 /* ProfileViewController.swift */; };
+		711BA79F1D53FA40000191D8 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 711BA79E1D53FA40000191D8 /* HomeViewController.swift */; };
+		711BA7A11D55298B000191D8 /* RequestAppointmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 711BA7A01D55298B000191D8 /* RequestAppointmentViewController.swift */; };
+		711BA7A31D554491000191D8 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 711BA7A21D554491000191D8 /* ChatViewController.swift */; };
+		711BA7A91D594402000191D8 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 711BA7A81D594402000191D8 /* MainViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		08D36EB095FD9E1BF02D1FE7 /* Pods-OpenIDConnectSwift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenIDConnectSwift.release.xcconfig"; path = "Pods/Target Support Files/Pods-OpenIDConnectSwift/Pods-OpenIDConnectSwift.release.xcconfig"; sourceTree = "<group>"; };
 		710124AF1D11BCD9009F420A /* OpenIDConnectSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenIDConnectSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		710124B21D11BCD9009F420A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		710124B41D11BCD9009F420A /* OktaAppAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OktaAppAuth.swift; sourceTree = "<group>"; };
 		710124B71D11BCD9009F420A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		710124B91D11BCD9009F420A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		710124BC1D11BCD9009F420A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		710124BE1D11BCD9009F420A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		710124C41D11BDB9009F420A /* AppAuth-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppAuth-Bridging-Header.h"; sourceTree = "<group>"; };
 		710124C51D11DBD8009F420A /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
-		71724C251D189D2F00077380 /* ImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
+		7111E45D1D53C32100DF5B02 /* AppointmentsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppointmentsViewController.swift; sourceTree = "<group>"; };
+		7111E45F1D53E74400DF5B02 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		711BA79E1D53FA40000191D8 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		711BA7A01D55298B000191D8 /* RequestAppointmentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestAppointmentViewController.swift; sourceTree = "<group>"; };
+		711BA7A21D554491000191D8 /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		711BA7A81D594402000191D8 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		D4F2115040DA5DDAA9217F3D /* Pods_OpenIDConnectSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenIDConnectSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAB41A5EFBA638662D974B56 /* Pods-OpenIDConnectSwift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenIDConnectSwift.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OpenIDConnectSwift/Pods-OpenIDConnectSwift.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -76,14 +84,18 @@
 			isa = PBXGroup;
 			children = (
 				710124B21D11BCD9009F420A /* AppDelegate.swift */,
-				710124B41D11BCD9009F420A /* OktaAppAuth.swift */,
 				710124B61D11BCD9009F420A /* Main.storyboard */,
 				710124B91D11BCD9009F420A /* Assets.xcassets */,
 				710124BB1D11BCD9009F420A /* LaunchScreen.storyboard */,
 				710124BE1D11BCD9009F420A /* Info.plist */,
 				710124C41D11BDB9009F420A /* AppAuth-Bridging-Header.h */,
 				710124C51D11DBD8009F420A /* Models.swift */,
-				71724C251D189D2F00077380 /* ImageViewController.swift */,
+				7111E45D1D53C32100DF5B02 /* AppointmentsViewController.swift */,
+				7111E45F1D53E74400DF5B02 /* ProfileViewController.swift */,
+				711BA79E1D53FA40000191D8 /* HomeViewController.swift */,
+				711BA7A01D55298B000191D8 /* RequestAppointmentViewController.swift */,
+				711BA7A21D554491000191D8 /* ChatViewController.swift */,
+				711BA7A81D594402000191D8 /* MainViewController.swift */,
 			);
 			path = OpenIDConnectSwift;
 			sourceTree = "<group>";
@@ -219,10 +231,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7111E4601D53E74400DF5B02 /* ProfileViewController.swift in Sources */,
 				710124C61D11DBD8009F420A /* Models.swift in Sources */,
-				710124B51D11BCD9009F420A /* OktaAppAuth.swift in Sources */,
-				71724C261D189D2F00077380 /* ImageViewController.swift in Sources */,
+				711BA7A31D554491000191D8 /* ChatViewController.swift in Sources */,
 				710124B31D11BCD9009F420A /* AppDelegate.swift in Sources */,
+				7111E45E1D53C32100DF5B02 /* AppointmentsViewController.swift in Sources */,
+				711BA7A91D594402000191D8 /* MainViewController.swift in Sources */,
+				711BA79F1D53FA40000191D8 /* HomeViewController.swift in Sources */,
+				711BA7A11D55298B000191D8 /* RequestAppointmentViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

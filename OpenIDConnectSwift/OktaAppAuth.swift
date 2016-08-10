@@ -121,6 +121,10 @@ class OktaAppAuth: UIViewController, OIDAuthStateChangeDelegate {
         if let archivedAuthState = NSUserDefaults.standardUserDefaults().objectForKey(appConfig.kAppAuthExampleAuthStateKey) as? NSData {
             if let authState = NSKeyedUnarchiver.unarchiveObjectWithData(archivedAuthState) as? OIDAuthState {
                 setAuthState(authState)
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let vc = storyboard.instantiateViewControllerWithIdentifier("AppointmentsViewController")
+                self.presentViewController(vc, animated: true, completion: nil)
+
             } else {  return  }
         } else { return }
     }
@@ -445,11 +449,11 @@ class OktaAppAuth: UIViewController, OIDAuthStateChangeDelegate {
     
     /*  Segue to next ImageView for testing Demo API Call    */
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?){
-        if segue.identifier == "ImageViewSegue" {
-            let destinationController = segue.destinationViewController as! ImageViewController
-            destinationController.authState = authState
-            destinationController.appConfig = appConfig
-        }
+//        if segue.identifier == "ImageViewSegue" {
+//            let destinationController = segue.destinationViewController as! ImageViewController
+//            destinationController.authState = authState
+//            destinationController.appConfig = appConfig
+//        }
     }
 
 }

@@ -7,5 +7,5 @@ target 'OpenIDConnectSwift' do
 
   # Pods for OpenIDConnectSwift
   pod 'AppAuth'
-
+  pod 'Alamofire', '~> 3.4'
 end
