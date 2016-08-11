@@ -16,17 +16,27 @@
  */
 
 import UIKit
+var loading = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
 
-class MainViewController: UITabBarController {
+class MainViewController: UITabBarController, UITabBarControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.delegate = self
         // Do any additional setup after loading the view.
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    // UITabBarDelegate
+    override func tabBar(tabBar: UITabBar, didSelectItem item: UITabBarItem) {
+
+    }
+    
+    // UITabBarControllerDelegate
+    func tabBarController(tabBarController: UITabBarController, didSelectViewController viewController: UIViewController) {
     }
 
 }

@@ -8,4 +8,5 @@ target 'OpenIDConnectSwift' do
   # Pods for OpenIDConnectSwift
   pod 'AppAuth'
   pod 'Alamofire', '~> 3.4'
+  pod 'JSQMessagesViewController', :git => 'https://github.com/jessesquires/JSQMessagesViewController.git', :branch => 'develop'
 end

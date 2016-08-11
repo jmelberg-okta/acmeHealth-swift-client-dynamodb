@@ -136,6 +136,7 @@ class RequestAppointmentViewController: UITableViewController, UIPickerViewDataS
         createAppointment(params){
             response, error in
             print(response!)
+            
             self.navigationController?.popViewControllerAnimated(true)
         }
     }

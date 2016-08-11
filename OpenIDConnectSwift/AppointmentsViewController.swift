@@ -20,15 +20,6 @@ import UIKit
 class AppointmentsViewController: UITableViewController {
     var currentAppointments:[NSDictionary] = []
     
-    @IBAction func logout(sender: AnyObject) {
-        
-        for key in Array(NSUserDefaults.standardUserDefaults().dictionaryRepresentation().keys) {
-            NSUserDefaults.standardUserDefaults().removeObjectForKey(key)
-        }
-        print("Signed out")
-        let login = self.storyboard?.instantiateInitialViewController()
-        self.presentViewController(login!, animated: false, completion: nil)
-    }
     override func viewDidLoad() {
         super.viewDidLoad()
         currentAppointments = appointmentData
@@ -54,11 +45,11 @@ class AppointmentsViewController: UITableViewController {
                 empty.text = "No appointments available"
                 empty.font = empty.font.fontWithSize(25)
                 empty.textColor = UIColor(red: 154.0/255.0, green: 157.0/255.0, blue: 156.0/255.0, alpha: 1.0)
-                empty.backgroundColor = UIColor(red:0.98, green:0.98, blue:0.98, alpha:1.0)
+                empty.backgroundColor = UIColor.groupTableViewBackgroundColor()
                 empty.textAlignment = NSTextAlignment.Center
                 self.tableView.backgroundView = empty
             } else {
-                self.tableView.backgroundView = nil
+                self.tableView.backgroundColor = UIColor.groupTableViewBackgroundColor()
             }
 
             self.tableView.reloadData()
@@ -68,11 +59,8 @@ class AppointmentsViewController: UITableViewController {
     }
     
     override func viewWillAppear(animated: Bool) {
-        self.navigationController?.navigationBar.tintColor = UIColor(red:255, green:255, blue:255, alpha:1.0)
-        self.navigationController?.navigationBar.barTintColor = UIColor(red:0.91, green:0.18, blue:0.31, alpha:1.0)
-        self.navigationController?.navigationBar.titleTextAttributes = [
-            NSForegroundColorAttributeName: UIColor(red:255, green:255, blue:255, alpha:1.0)
-        ]
+        self.tableView.backgroundColor = UIColor.groupTableViewBackgroundColor()
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -100,9 +88,44 @@ class AppointmentsViewController: UITableViewController {
 
             pictureLabel.layer.masksToBounds = false
             pictureLabel.clipsToBounds = true
-            pictureLabel.layer.borderColor = UIColor.blackColor().CGColor
 
             pictureLabel.image = UIImage(named: "\(appointment["providerId"]!)")
+            if let status = appointment["status"] as? String! {
+                if status == "REQUESTED" {
+                    pictureLabel.layer.borderColor = UIColor.yellowColor().CGColor
+                    pictureLabel.layer.borderWidth = 2.0
+                    if let statusLabel = cell.viewWithTag(103) as? UILabel {
+                        statusLabel.text = "PENDING APPROVAL"
+                        if let timeLabel = cell.viewWithTag(101) as? UILabel {
+                            timeLabel.textColor = UIColor.grayColor()
+                        }
+                    }
+                } else if status == "CONFIRMED" {
+                    pictureLabel.layer.borderColor = UIColor.greenColor().CGColor
+                    pictureLabel.layer.borderWidth = 2.0
+                    if let statusLabel = cell.viewWithTag(103) as? UILabel {
+                        statusLabel.text = "CONFIRMED"
+                    }
+                } else if status == "DENIED" {
+                    pictureLabel.layer.borderColor = UIColor.redColor().CGColor
+                    pictureLabel.layer.borderWidth = 2.0
+                    if let statusLabel = cell.viewWithTag(103) as? UILabel {
+                        statusLabel.text = "NOT APPROVED"
+                        if let timeLabel = cell.viewWithTag(101) as? UILabel {
+                            timeLabel.textColor = UIColor.grayColor()
+                        }
+                    }
+                } else {
+                    pictureLabel.layer.borderColor = UIColor.blackColor().CGColor
+                    pictureLabel.layer.borderWidth = 2.0
+                    if let statusLabel = cell.viewWithTag(103) as? UILabel {
+                        statusLabel.text = ""
+                        if let timeLabel = cell.viewWithTag(101) as? UILabel {
+                            timeLabel.textColor = UIColor.grayColor()
+                        }
+                    }
+                }
+            }
         }
         if let titleLabel = cell.viewWithTag(100) as? UILabel {
             if let name = getPhysician("\(appointment["providerId"]!)") {

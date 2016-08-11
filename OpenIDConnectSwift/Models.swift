@@ -39,25 +39,31 @@ let config = OktaConfiguration()
 
 // Sample Data
 var appointmentData: [NSDictionary]!
-var user:User!
+var user:AcmeUser!
 var physicians : [NSDictionary]!
 
 var API_URL = "https://5ef909db.ngrok.io"
 
-class User {
+class AcmeUser {
     var firstName : String!
     var lastName : String!
     var provider : String!
+    var email : String!
+    var physician : String!
+    var picture : String!
     
     func setFirst(firstName: String) {   self.firstName = firstName}
     func setLast(lastName: String) {self.lastName = lastName }
     func setProvider(provider: String) { self.provider = provider }
-    func getDetails() -> String { return "\(firstName) \(lastName)" }
+    func getDetails() -> String { return "\(firstName) \(lastName) \nEmail: \(email) \nPicture: \(picture)" }
 
-    init(firstName: String, lastName:String, provider:String) {
+    init(firstName: String, lastName:String, email: String?, provider:String, picture:String) {
         self.firstName = firstName
         self.lastName = lastName
+        self.email = email
         self.provider = provider
+        self.physician = "Dr. John Doe"
+        self.picture = picture
     }
 }
 
@@ -119,6 +125,19 @@ func createAppointment(params: [String:String!], completionHandler: (NSDictionar
             completionHandler(JSON as? NSDictionary, nil)
         }
     }
+}
+
+func getActiveUser() -> AcmeUser {
+    return user
+}
+
+func loadImage() -> UIImage {
+    if let url = NSURL(string: activeUser.picture) {
+        if let data = NSData(contentsOfURL: url) {
+            return UIImage(data: data)!
+        }
+    }
+    return UIImage(named: "acme-logo")!
 }
 
 

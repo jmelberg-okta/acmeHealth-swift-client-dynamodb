@@ -17,6 +17,7 @@
 
 import UIKit
 import AppAuth
+import Alamofire
 
 class HomeViewController: UIViewController, OIDAuthStateChangeDelegate {
 
@@ -160,7 +161,6 @@ class HomeViewController: UIViewController, OIDAuthStateChangeDelegate {
             if(token != accessToken){ token = accessToken }
         }
         
-        
         let request = NSMutableURLRequest(URL: userinfoEndpoint!)
         let authorizationHeaderValue = "Bearer \(token!)"
         request.addValue(authorizationHeaderValue, forHTTPHeaderField: "Authorization")
@@ -200,10 +200,12 @@ class HomeViewController: UIViewController, OIDAuthStateChangeDelegate {
     }
     
     func createUser(jsonDictionaryOrArray : Dictionary<String,AnyObject>) {
-        let newUser = User (
+        let newUser = AcmeUser (
             firstName: "\(jsonDictionaryOrArray["given_name"]!)",
             lastName: "\(jsonDictionaryOrArray["family_name"]!)",
-            provider: "Healthcare Cross"
+            email : "\(jsonDictionaryOrArray["email"]!)",
+            provider: "Healthcare Cross",
+            picture : "\(jsonDictionaryOrArray["picture"]!)"
         )
         loadAppointments() {
             response, err in

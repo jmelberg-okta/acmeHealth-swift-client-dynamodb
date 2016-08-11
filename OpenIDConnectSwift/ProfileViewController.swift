@@ -18,71 +18,114 @@
 import UIKit
 import AppAuth
 
-class ProfileViewController: UITableViewController {
+class ProfileViewController: UITableViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     
-    // Okta Configuration
-    var appConfig = config
+    @IBOutlet weak var providerName: UILabel!
+    @IBOutlet weak var physicianName: UILabel!
+    @IBOutlet weak var profileImage: UIImageView!
+    @IBOutlet weak var profileName: UILabel!
+    @IBOutlet weak var profileEmail: UILabel!
+    @IBOutlet weak var providerPicker: UIPickerView!
     
-    // AppAuth authState
-    var authState:OIDAuthState?
-
+    var pickerHidden = true
+    var submitHidden = true
     
     @IBAction func editProfile(sender: AnyObject) {
-        user.setFirst(firstName.text!)
-        user.setLast(lastName.text!)
-        user.setProvider(insuranceProvider.text!)
+        submitHidden = false
+        //        user.setFirst(firstName.text!)
+        //        user.setLast(lastName.text!)
+        //        user.setProvider(insuranceProvider.text!)
         // Navigate to home tab
+        toggleSubmit()
         tabBarController?.selectedIndex = 0
     }
-    @IBAction func cancelEdit(sender: AnyObject) {
-        // Navigate to home tab
-        tabBarController?.selectedIndex = 0
-
-
-    }
-    
-    @IBOutlet weak var firstName: UITextField!
-    @IBOutlet weak var lastName: UITextField!
-    @IBOutlet weak var insuranceProvider: UITextField!
-    @IBOutlet weak var primaryCare: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(user.getDetails())
-
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        firstName.text = "\(user.firstName)"
-        lastName.text = "\(user.lastName)"
-        insuranceProvider.text = "\(user.provider)"
+        // Set profile content
+        print("User: \(user.firstName) \(user.lastName)")
+        profileName.text = "\(user.firstName) \(user.lastName)"
+        profileEmail.text = "\(user.email)"
+        providerName.text = "\(user.provider)"
+        
+        // Load image
+        if let url = NSURL(string: user.picture){
+            if let data = NSData(contentsOfURL: url) {
+                profileImage.image = UIImage(data: data)
+            }
+        } else {
+            profileImage.image = UIImage(named: "acme-logo")
+        }
+        
+        // Format img
+        profileImage.layer.cornerRadius = profileImage.frame.size.height / 2
+        profileImage.layer.masksToBounds = false
+        profileImage.clipsToBounds = true
+        
+        if let currentPhysician = user.physician {
+            physicianName.text = "\(currentPhysician)"
+        } else {
+            physicianName.text = "Please Select Physician"
+        }
+        
+        self.providerPicker.dataSource = self
+        self.providerPicker.delegate = self
         self.tableView.reloadData()
-    }
-    
-    /**  Loads the current authState from NSUserDefaults */
-    func loadState() {
-        if let archivedAuthState = NSUserDefaults.standardUserDefaults().objectForKey(appConfig.kAppAuthExampleAuthStateKey) as? NSData {
-            if let authState = NSKeyedUnarchiver.unarchiveObjectWithData(archivedAuthState) as? OIDAuthState {
-                self.authState = authState
-            } else {  return  }
-        } else { return }
+
+
     }
 
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-    // MARK: - Table view data source
-
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 4
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        if indexPath.section == 2 && indexPath.row == 0 {
+            togglePicker()
+        }
     }
-
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        if pickerHidden && indexPath.section == 2 && indexPath.row == 1 {
+            return 0
+        }
+        else {
+            return super.tableView(tableView, heightForRowAtIndexPath: indexPath)
+        }
+    }
+    
+    func togglePicker() {
+        pickerHidden = !pickerHidden
+        tableView.beginUpdates()
+        tableView.endUpdates()
+    }
+    
+    func toggleSubmit() {
+        submitHidden = !submitHidden
+        
+        
+    }
+    
+    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
         return 1
     }
+    
+    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return physicians.count;
+    }
+    
+    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        let name = physicians[row]["name"] as? String
+        return name!
+    }
+    
+    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        physicianName.text = physicians[row]["name"] as? String
+    }
+
     
     func createAlert(alertTitle: String, alertMessage: String) {
         let alert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .Alert)

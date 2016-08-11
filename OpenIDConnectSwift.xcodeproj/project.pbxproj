@@ -19,6 +19,7 @@
 		711BA7A11D55298B000191D8 /* RequestAppointmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 711BA7A01D55298B000191D8 /* RequestAppointmentViewController.swift */; };
 		711BA7A31D554491000191D8 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 711BA7A21D554491000191D8 /* ChatViewController.swift */; };
 		711BA7A91D594402000191D8 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 711BA7A81D594402000191D8 /* MainViewController.swift */; };
+		711BA7AB1D5BE40C000191D8 /* DemoConversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 711BA7AA1D5BE40C000191D8 /* DemoConversation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +38,7 @@
 		711BA7A01D55298B000191D8 /* RequestAppointmentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestAppointmentViewController.swift; sourceTree = "<group>"; };
 		711BA7A21D554491000191D8 /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		711BA7A81D594402000191D8 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		711BA7AA1D5BE40C000191D8 /* DemoConversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoConversation.swift; sourceTree = "<group>"; };
 		D4F2115040DA5DDAA9217F3D /* Pods_OpenIDConnectSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenIDConnectSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAB41A5EFBA638662D974B56 /* Pods-OpenIDConnectSwift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenIDConnectSwift.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OpenIDConnectSwift/Pods-OpenIDConnectSwift.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -96,6 +98,7 @@
 				711BA7A01D55298B000191D8 /* RequestAppointmentViewController.swift */,
 				711BA7A21D554491000191D8 /* ChatViewController.swift */,
 				711BA7A81D594402000191D8 /* MainViewController.swift */,
+				711BA7AA1D5BE40C000191D8 /* DemoConversation.swift */,
 			);
 			path = OpenIDConnectSwift;
 			sourceTree = "<group>";
@@ -234,6 +237,7 @@
 				7111E4601D53E74400DF5B02 /* ProfileViewController.swift in Sources */,
 				710124C61D11DBD8009F420A /* Models.swift in Sources */,
 				711BA7A31D554491000191D8 /* ChatViewController.swift in Sources */,
+				711BA7AB1D5BE40C000191D8 /* DemoConversation.swift in Sources */,
 				710124B31D11BCD9009F420A /* AppDelegate.swift in Sources */,
 				7111E45E1D53C32100DF5B02 /* AppointmentsViewController.swift in Sources */,
 				711BA7A91D594402000191D8 /* MainViewController.swift in Sources */,

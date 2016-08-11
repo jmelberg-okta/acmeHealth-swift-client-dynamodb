@@ -1,15 +1,28 @@
 PODS:
   - Alamofire (3.4.1)
   - AppAuth (0.3.0)
+  - JSQMessagesViewController (7.3.4)
 
 DEPENDENCIES:
   - Alamofire (~> 3.4)
   - AppAuth
+  - JSQMessagesViewController (from `https://github.com/jessesquires/JSQMessagesViewController.git`, branch `develop`)
+
+EXTERNAL SOURCES:
+  JSQMessagesViewController:
+    :branch: develop
+    :git: https://github.com/jessesquires/JSQMessagesViewController.git
+
+CHECKOUT OPTIONS:
+  JSQMessagesViewController:
+    :commit: 6d468fd2e91483661c199d16c94d8927907bf68a
+    :git: https://github.com/jessesquires/JSQMessagesViewController.git
 
 SPEC CHECKSUMS:
   Alamofire: 01a82e2f6c0f860ade35534c8dd88be61bdef40c
   AppAuth: b5a91cfbaa742d542e080120893ba80b06ebd1c7
+  JSQMessagesViewController: c11b9e77372ab72c45c67311f6da7342e32df1e8
 
-PODFILE CHECKSUM: 36b8916f87b486e94248f0a95e98c4ae9dfee675
+PODFILE CHECKSUM: 3cfa9006536a99cc8b350e1c4fa1cafcce124b09
 
 COCOAPODS: 1.0.1
