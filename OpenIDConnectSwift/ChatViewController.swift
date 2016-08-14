@@ -26,9 +26,10 @@ class ChatViewController: JSQMessagesViewController {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "close-ia"), landscapeImagePhone: UIImage(named: "close-ia"), style: .Plain, target: self, action: #selector(exitMessages))
         self.edgesForExtendedLayout = UIRectEdge.None
         messages = makeNormalConversation()
+        
         // Bubbles with tails
-        incomingBubble = JSQMessagesBubbleImageFactory().incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleBlueColor())
-        outgoingBubble = JSQMessagesBubbleImageFactory().outgoingMessagesBubbleImageWithColor(UIColor.lightGrayColor())
+        incomingBubble = JSQMessagesBubbleImageFactory().incomingMessagesBubbleImageWithColor(UIColor.lightGrayColor())
+        outgoingBubble = JSQMessagesBubbleImageFactory().outgoingMessagesBubbleImageWithColor(UIColor(red: 233/255, green: 65/255, blue: 80/255, alpha: 1.0))
 
         
         collectionView?.collectionViewLayout.incomingAvatarViewSize = CGSize(width: kJSQMessagesCollectionViewAvatarSizeDefault, height:kJSQMessagesCollectionViewAvatarSizeDefault )

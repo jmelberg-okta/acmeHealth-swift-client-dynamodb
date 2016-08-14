@@ -16,7 +16,6 @@
  */
 
 import UIKit
-var loading = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
 
 class MainViewController: UITabBarController, UITabBarControllerDelegate {
     override func viewDidLoad() {
