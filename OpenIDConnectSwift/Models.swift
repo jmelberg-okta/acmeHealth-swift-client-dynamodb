@@ -26,9 +26,9 @@ class OktaConfiguration {
     let apiEndpoint: NSURL!
     
     init(){
-        kIssuer = "https://example.oktapreview.com"                  // Base url of Okta Developer domain
-        kClientID = "79arVRKBcBEYMuMOXrYF"                           // Client ID of Application
-        kRedirectURI = "com.oktapreview.example:/oauth"              // Reverse DNS notation of base url with oauth route
+        kIssuer = "https://jordandemo.oktapreview.com"                  // Base url of Okta Developer domain
+        kClientID = "Jw1nyzbsNihSuOETY3R1"                           // Client ID of Application
+        kRedirectURI = "com.oktapreview.jordandemo:/oauth"              // Reverse DNS notation of base url with oauth route
         kAppAuthExampleAuthStateKey = "com.okta.openid.authState"
         apiEndpoint = NSURL(string: "https://example.com/protected") // Resource Server URL
     }
@@ -42,7 +42,7 @@ var appointmentData: [NSDictionary]!
 var user:AcmeUser!
 var physicians : [NSDictionary]!
 
-var API_URL = "https://5ef909db.ngrok.io"
+var API_URL = "https://20136853.ngrok.io"
 
 class AcmeUser {
     var firstName : String!
@@ -51,19 +51,21 @@ class AcmeUser {
     var email : String!
     var physician : String!
     var picture : String!
+    var id : String!
     
     func setFirst(firstName: String) {   self.firstName = firstName}
     func setLast(lastName: String) {self.lastName = lastName }
     func setProvider(provider: String) { self.provider = provider }
     func getDetails() -> String { return "\(firstName) \(lastName) \nEmail: \(email) \nPicture: \(picture)" }
 
-    init(firstName: String, lastName:String, email: String?, provider:String, picture:String) {
+    init(firstName: String, lastName:String, email: String?, provider:String, picture:String, id: String) {
         self.firstName = firstName
         self.lastName = lastName
         self.email = email
         self.provider = provider
         self.physician = "Dr. John Doe"
         self.picture = picture
+        self.id = id
     }
 }
 
@@ -97,19 +99,32 @@ func getPhysicianID(name: String) -> String? {
     return nil
 }
 
-func loadAppointments(completionHandler: ([NSDictionary]?, NSError?) -> ()){
-    Alamofire.request(.GET, API_URL + "/appointments")
+func loadAppointments(token: String, completionHandler: ([NSDictionary]?, NSError?) -> ()){
+    let headers = ["Authorization" : "Bearer \(token)",
+                   "Accept" :  "application/json"]
+    Alamofire.request(.GET, API_URL + "/appointments", headers: headers)
         .validate()
         .responseJSON { response in
             if let JSON = response.result.value {
-                completionHandler(JSON as? [NSDictionary], nil)
+                // Only pull appointments that match patient ID
+                let id = user.id
+                var appointments: [NSDictionary] = []
+                for appointment in (JSON  as? [NSDictionary])!{
+                    if let patientId = appointment["patientId"] as? String{
+                        if id == patientId {
+                            appointments.append(appointment)
+                        }
+                    }
+                }
+                completionHandler(appointments, nil)
             }
     }
 }
 
-func loadPhysicians(completionHandler: ([NSDictionary]?, NSError?) -> ()){
-    
-    Alamofire.request(.GET, API_URL + "/providers")
+func loadPhysicians(token: String, completionHandler: ([NSDictionary]?, NSError?) -> ()){
+    let headers = ["Authorization" : "Bearer \(token)",
+                   "Accept" :  "application/json"]
+    Alamofire.request(.GET, API_URL + "/providers", headers : headers)
         .validate()
         .responseJSON { response in
             if let JSON = response.result.value {

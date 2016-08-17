@@ -16,13 +16,63 @@
  */
 
 import UIKit
+import AppAuth
 
-class AppointmentsViewController: UITableViewController {
+class AppointmentsViewController: UITableViewController, OIDAuthStateChangeDelegate {
     var currentAppointments:[NSDictionary] = []
+    
+    // Okta Configuration
+    var appConfig = config
+    
+    // AppAuth authState
+    var authState:OIDAuthState?
+    
+    /**  Saves the current authState into NSUserDefaults  */
+    func saveState() {
+        if(authState != nil){
+            let archivedAuthState = NSKeyedArchiver.archivedDataWithRootObject(authState!)
+            NSUserDefaults.standardUserDefaults().setObject(archivedAuthState, forKey: appConfig.kAppAuthExampleAuthStateKey)
+            NSUserDefaults.standardUserDefaults().setObject(true, forKey: "active")
+            NSUserDefaults.standardUserDefaults().synchronize()
+        }
+        else { NSUserDefaults.standardUserDefaults().setObject(nil, forKey: appConfig.kAppAuthExampleAuthStateKey) }
+        NSUserDefaults.standardUserDefaults().synchronize()
+    }
+    
+    /**  Loads the current authState from NSUserDefaults */
+    func loadState() {
+        if let archivedAuthState = NSUserDefaults.standardUserDefaults().objectForKey(appConfig.kAppAuthExampleAuthStateKey) as? NSData {
+            if let authState = NSKeyedUnarchiver.unarchiveObjectWithData(archivedAuthState) as? OIDAuthState {
+                setAuthState(authState)
+            } else { return }
+        } else { return }
+    }
+    
+    private func setAuthState(authState:OIDAuthState?){
+        self.authState = authState
+        self.authState?.stateChangeDelegate = self
+        self.stateChanged()
+    }
+    
+    /**  Required method  */
+    func stateChanged(){ self.saveState() }
+    
+    /**  Required method  */
+    func didChangeState(state: OIDAuthState) { self.stateChanged() }
+    
+    /**  Verifies authState was performed  */
+    func checkAuthState() -> Bool {
+        if (authState != nil){
+            return true
+        } else { return false }
+    }
+/************************************************/
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         currentAppointments = appointmentData
+        self.loadState()
         if currentAppointments.count < 1 {
             let empty: UILabel = UILabel(frame: CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height))
             empty.text = "No appointments available"
@@ -36,20 +86,23 @@ class AppointmentsViewController: UITableViewController {
     }
     
     func refresh(sender: AnyObject) {
-        loadAppointments() {
+        loadAppointments((authState?.lastTokenResponse?.accessToken)!) {
             response, err in
             appointmentData = response!
             self.currentAppointments = appointmentData
+            let empty: UILabel = UILabel(frame: CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height))
+            empty.text = "No appointments available"
+            empty.font = empty.font.fontWithSize(25)
+            empty.textColor = UIColor(red: 154.0/255.0, green: 157.0/255.0, blue: 156.0/255.0, alpha: 1.0)
+            empty.backgroundColor = UIColor.groupTableViewBackgroundColor()
+            empty.textAlignment = NSTextAlignment.Center
+            
             if self.currentAppointments.count < 1 {
-                let empty: UILabel = UILabel(frame: CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height))
-                empty.text = "No appointments available"
-                empty.font = empty.font.fontWithSize(25)
-                empty.textColor = UIColor(red: 154.0/255.0, green: 157.0/255.0, blue: 156.0/255.0, alpha: 1.0)
-                empty.backgroundColor = UIColor.groupTableViewBackgroundColor()
-                empty.textAlignment = NSTextAlignment.Center
                 self.tableView.backgroundView = empty
             } else {
                 self.tableView.backgroundColor = UIColor.groupTableViewBackgroundColor()
+                empty.text = ""
+                self.tableView.backgroundView = empty;
             }
 
             self.tableView.reloadData()

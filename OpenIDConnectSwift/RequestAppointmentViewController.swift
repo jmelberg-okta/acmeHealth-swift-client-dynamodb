@@ -130,7 +130,9 @@ class RequestAppointmentViewController: UITableViewController, UIPickerViewDataS
         let params = [
             "comment" : self.reasonText.text,
             "startTime": formattedDate!,
-            "providerId" : id
+            "providerId" : id,
+            "patient" : "\(user.firstName) \(user.lastName)",
+            "patientId" : user.id
         ]
         
         createAppointment(params){

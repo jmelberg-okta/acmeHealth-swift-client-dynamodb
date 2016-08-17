@@ -115,7 +115,8 @@ class HomeViewController: UIViewController, OIDAuthStateChangeDelegate {
                                                     OIDScopeAddress,
                                                     "groups",
                                                     "offline_access",
-                                                    "gravatar"
+                                                    "appointments:read",
+                                                    "providers:read"
                 ],
                                                   redirectURL: redirectURI!,
                                                   responseType: OIDResponseTypeCode,
@@ -187,6 +188,7 @@ class HomeViewController: UIViewController, OIDAuthStateChangeDelegate {
                             else { print("HTTP: \(httpResponse.statusCode). Response: \(responseText)") }
                             return
                         }
+                        print("\(jsonDictionaryOrArray)")
                         self.createUser(jsonDictionaryOrArray as! Dictionary<String, AnyObject>)
 
                     } catch {  print("Error while serializing data to JSON")  }
@@ -205,17 +207,19 @@ class HomeViewController: UIViewController, OIDAuthStateChangeDelegate {
             lastName: "\(jsonDictionaryOrArray["family_name"]!)",
             email : "\(jsonDictionaryOrArray["email"]!)",
             provider: "Healthcare Cross",
-            picture : "\(jsonDictionaryOrArray["picture"]!)"
+            picture : "\(jsonDictionaryOrArray["picture"]!)",
+            id : "\(jsonDictionaryOrArray["sub"]!)"
         )
-        loadAppointments() {
+        loadAppointments((self.authState?.lastTokenResponse?.accessToken)!) {
             response, err in
             appointmentData = response!
 
         }
-        loadPhysicians() {
+        loadPhysicians((self.authState?.lastTokenResponse?.accessToken)!) {
             response, err in
             physicians = response!
             
+            print(physicians)
             // Segue after load
             let home = self.storyboard?.instantiateViewControllerWithIdentifier("MainController")
             self.presentViewController(home!, animated: false, completion: nil)
