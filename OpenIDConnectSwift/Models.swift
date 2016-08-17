@@ -99,24 +99,15 @@ func getPhysicianID(name: String) -> String? {
     return nil
 }
 
-func loadAppointments(token: String, completionHandler: ([NSDictionary]?, NSError?) -> ()){
+func loadAppointments(token: String, id: String, completionHandler: ([NSDictionary]?, NSError?) -> ()){
     let headers = ["Authorization" : "Bearer \(token)",
                    "Accept" :  "application/json"]
-    Alamofire.request(.GET, API_URL + "/appointments", headers: headers)
+    Alamofire.request(.GET, API_URL + "/appointments/"+id, headers: headers)
         .validate()
         .responseJSON { response in
             if let JSON = response.result.value {
                 // Only pull appointments that match patient ID
-                let id = user.id
-                var appointments: [NSDictionary] = []
-                for appointment in (JSON  as? [NSDictionary])!{
-                    if let patientId = appointment["patientId"] as? String{
-                        if id == patientId {
-                            appointments.append(appointment)
-                        }
-                    }
-                }
-                completionHandler(appointments, nil)
+                completionHandler(JSON as? [NSDictionary], nil)
             }
     }
 }
@@ -140,6 +131,19 @@ func createAppointment(params: [String:String!], completionHandler: (NSDictionar
             completionHandler(JSON as? NSDictionary, nil)
         }
     }
+}
+
+func removeAppointment(token: String, id : String, completionHandler: (Bool?, NSError?) -> ()){
+    let headers = ["Authorization" : "Bearer \(token)",
+                   "Accept" :  "application/json"]
+    Alamofire.request(.DELETE, API_URL + "/appointments/" + id, headers: headers)
+    .validate()
+    .responseJSON { response in
+        if response.response?.statusCode == 204{
+            completionHandler(true, nil)
+        }
+    }
+
 }
 
 func getActiveUser() -> AcmeUser {

@@ -116,7 +116,8 @@ class HomeViewController: UIViewController, OIDAuthStateChangeDelegate {
                                                     "groups",
                                                     "offline_access",
                                                     "appointments:read",
-                                                    "providers:read"
+                                                    "providers:read",
+                                                    "appointments:cancel"
                 ],
                                                   redirectURL: redirectURI!,
                                                   responseType: OIDResponseTypeCode,
@@ -131,6 +132,7 @@ class HomeViewController: UIViewController, OIDAuthStateChangeDelegate {
                         self.setAuthState(authorizationResponse)
                         let accessToken = authorizationResponse!.lastTokenResponse!.accessToken!
                         print("Access Token: \n\(accessToken)")
+                        print("Id Token: \n\(authorizationResponse!.lastTokenResponse!.idToken!)")
                         self.pullAttributes()
                         
                     } else {
@@ -210,19 +212,26 @@ class HomeViewController: UIViewController, OIDAuthStateChangeDelegate {
             picture : "\(jsonDictionaryOrArray["picture"]!)",
             id : "\(jsonDictionaryOrArray["sub"]!)"
         )
-        loadAppointments((self.authState?.lastTokenResponse?.accessToken)!) {
-            response, err in
-            appointmentData = response!
+        authState?.withFreshTokensPerformAction(){
+            accessToken, idToken, error in
+            if(error != nil){
+                print("Error fetching fresh tokens: \(error!.localizedDescription)")
+                return
+            }
+            loadAppointments(accessToken!, id: newUser.id) {
+                response, err in
+                appointmentData = response!
 
-        }
-        loadPhysicians((self.authState?.lastTokenResponse?.accessToken)!) {
-            response, err in
-            physicians = response!
+            }
+            loadPhysicians(accessToken!) {
+                response, err in
+                physicians = response!
             
-            print(physicians)
-            // Segue after load
-            let home = self.storyboard?.instantiateViewControllerWithIdentifier("MainController")
-            self.presentViewController(home!, animated: false, completion: nil)
+                print(physicians)
+                // Segue after load
+                let home = self.storyboard?.instantiateViewControllerWithIdentifier("MainController")
+                self.presentViewController(home!, animated: false, completion: nil)
+            }
 
         }
         

@@ -86,7 +86,7 @@ class AppointmentsViewController: UITableViewController, OIDAuthStateChangeDeleg
     }
     
     func refresh(sender: AnyObject) {
-        loadAppointments((authState?.lastTokenResponse?.accessToken)!) {
+        loadAppointments((authState?.lastTokenResponse?.accessToken)!, id: user.id) {
             response, err in
             appointmentData = response!
             self.currentAppointments = appointmentData
@@ -203,5 +203,30 @@ class AppointmentsViewController: UITableViewController, OIDAuthStateChangeDeleg
         }
 
         return cell
+    }
+    
+    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if (editingStyle == UITableViewCellEditingStyle.Delete) {
+            
+            let appointment = currentAppointments[indexPath.row] as NSDictionary
+            authState?.withFreshTokensPerformAction(){
+                accessToken, idToken, error in
+                if(error != nil){
+                    print("Error fetching fresh tokens: \(error!.localizedDescription)")
+                    return
+                }
+
+                removeAppointment(accessToken!, id: appointment["_id"] as! String) {
+                    response, err in
+                        print(response!)
+                        self.refresh(self)
+                
+                }
+            }
+        }
     }
 }
