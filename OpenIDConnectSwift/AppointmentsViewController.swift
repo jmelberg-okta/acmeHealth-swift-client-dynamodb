@@ -158,6 +158,9 @@ class AppointmentsViewController: UITableViewController, OIDAuthStateChangeDeleg
                     pictureLabel.layer.borderWidth = 2.0
                     if let statusLabel = cell.viewWithTag(103) as? UILabel {
                         statusLabel.text = "CONFIRMED"
+                        if let timeLabel = cell.viewWithTag(101) as? UILabel {
+                            timeLabel.textColor = UIColor.redColor()
+                        }
                     }
                 } else if status == "DENIED" {
                     pictureLabel.layer.borderColor = UIColor.redColor().CGColor
