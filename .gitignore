@@ -1,5 +1,4 @@
 .DS_Store
 *.
 /Pods
-/OpenIDConnectSwift.xcodeproj
 /OpenIDConnectSwift.xcworkspace
