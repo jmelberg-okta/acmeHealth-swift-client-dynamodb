@@ -32,10 +32,7 @@ class ProfileViewController: UITableViewController, UIPickerViewDataSource, UIPi
     
     @IBAction func editProfile(sender: AnyObject) {
         submitHidden = false
-        //        user.setFirst(firstName.text!)
-        //        user.setLast(lastName.text!)
-        //        user.setProvider(insuranceProvider.text!)
-        // Navigate to home tab
+        // NOT IMPLEMENTED
         toggleSubmit()
         tabBarController?.selectedIndex = 0
     }

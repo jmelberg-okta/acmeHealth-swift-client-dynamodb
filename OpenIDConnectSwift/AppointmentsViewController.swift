@@ -168,7 +168,6 @@ class AppointmentsViewController: UITableViewController, OIDAuthStateChangeDeleg
             pictureLabel.layer.masksToBounds = false
             pictureLabel.clipsToBounds = true
             
-//            pictureLabel.image = UIImage(named: "\(appointment["providerId"]!)")
             pictureLabel.image = loadProviderImage(getPhysician("\(appointment["providerId"]!)")!)
             
             if let status = appointment["status"] as? String! {
