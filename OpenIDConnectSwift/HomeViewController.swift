@@ -28,6 +28,7 @@ class HomeViewController: UIViewController, OIDAuthStateChangeDelegate {
     
     // AppAuth authState
     var authState:OIDAuthState?
+    var authServerState: OIDAuthState?
     
     @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     @IBAction func signInAction(sender: AnyObject) {
@@ -50,30 +51,52 @@ class HomeViewController: UIViewController, OIDAuthStateChangeDelegate {
         // Dispose of any resources that can be recreated.
     }
     
+    /************************************************/
+    /**********  Begin AppAuth Boilerplate **********/
+    /************************************************/
+    
     /**  Saves the current authState into NSUserDefaults  */
     func saveState() {
+        if(authState == nil && authServerState == nil){
+            NSUserDefaults.standardUserDefaults().setObject(nil, forKey: appConfig.kAppAuthExampleAuthStateKey)
+            NSUserDefaults.standardUserDefaults().setObject(nil, forKey: appConfig.kAppAuthExampleAuthStateServerKey)
+        }
         if(authState != nil){
             let archivedAuthState = NSKeyedArchiver.archivedDataWithRootObject(authState!)
             NSUserDefaults.standardUserDefaults().setObject(archivedAuthState, forKey: appConfig.kAppAuthExampleAuthStateKey)
-            NSUserDefaults.standardUserDefaults().setObject(true, forKey: "active")
-            NSUserDefaults.standardUserDefaults().synchronize()
+
         }
-        else { NSUserDefaults.standardUserDefaults().setObject(nil, forKey: appConfig.kAppAuthExampleAuthStateKey) }
+        if (authServerState != nil) {
+            let archivedAuthServerState = NSKeyedArchiver.archivedDataWithRootObject(authServerState!)
+            NSUserDefaults.standardUserDefaults().setObject(archivedAuthServerState, forKey: appConfig.kAppAuthExampleAuthStateServerKey)
+        }
+        
         NSUserDefaults.standardUserDefaults().synchronize()
     }
     
     /**  Loads the current authState from NSUserDefaults */
     func loadState() {
         if let archivedAuthState = NSUserDefaults.standardUserDefaults().objectForKey(appConfig.kAppAuthExampleAuthStateKey) as? NSData {
-            if let authState = NSKeyedUnarchiver.unarchiveObjectWithData(archivedAuthState) as? OIDAuthState {
-                setAuthState(authState)
-            } else { authenticate() }
+            if let archivedAuthServerState = NSUserDefaults.standardUserDefaults().objectForKey(appConfig.kAppAuthExampleAuthStateServerKey) as? NSData {
+                if let authState = NSKeyedUnarchiver.unarchiveObjectWithData(archivedAuthState) as? OIDAuthState {
+                    if let authServerState = NSKeyedUnarchiver.unarchiveObjectWithData(archivedAuthServerState) as? OIDAuthState {
+                        setAuthServerState(authServerState)
+                    }
+                    setAuthState(authState)
+                } else {    authenticate()  }
+            }
         } else { authenticate() }
     }
     
     private func setAuthState(authState:OIDAuthState?){
         self.authState = authState
         self.authState?.stateChangeDelegate = self
+        self.stateChanged()
+    }
+    
+    private func setAuthServerState(authState:OIDAuthState?){
+        self.authServerState = authState
+        self.authServerState?.stateChangeDelegate = self
         self.stateChanged()
     }
     
@@ -89,7 +112,46 @@ class HomeViewController: UIViewController, OIDAuthStateChangeDelegate {
             return true
         } else { return false }
     }
+    
+    /************************************************/
+    /***********  End AppAuth Boilerplate ***********/
+    /************************************************/
 
+    
+    func authorizationServerConfig(appDelegate : AppDelegate, completionHandler: (Bool?, NSError?) -> ()) {
+        
+        // Manually configure Authorization Server Call
+        
+        let authorizationEndpoint = appConfig.kAuthorizationServerEndpoint
+        let tokenEndpoint = appConfig.kAuthorizationTokenEndpoint
+        
+        let config = OIDServiceConfiguration.init(authorizationEndpoint: authorizationEndpoint, tokenEndpoint: tokenEndpoint)
+        
+        // Build Authentication Request for accessToken
+        let request = OIDAuthorizationRequest(configuration: config!, clientId: appConfig.kClientID,
+                                              scopes: [
+                                                "appointments:read",
+                                                "appointments:write",
+                                                "appointments:cancel",
+                                                "providers:read"
+                                                ],
+                                              redirectURL: NSURL(string: appConfig.kRedirectURI)!,
+                                              responseType: OIDResponseTypeCode,
+                                              additionalParameters: nil)
+        print("Initiating Authorization Request: \(request!)")
+        appDelegate.currentAuthorizationFlow =
+            OIDAuthState.authStateByPresentingAuthorizationRequest(request!, presentingViewController: self){
+                authorizationResponse, error in
+                if(authorizationResponse != nil) {
+                    self.setAuthServerState(authorizationResponse)
+                    completionHandler(true, nil)
+                } else {
+                    print("Authorization Error: \(error!.localizedDescription)")
+                    self.setAuthServerState(nil)
+                }
+        }
+
+    }
 
     func authenticate() {
         let issuer = NSURL(string: appConfig.kIssuer)
@@ -97,28 +159,22 @@ class HomeViewController: UIViewController, OIDAuthStateChangeDelegate {
         // Discovers Endpoints
         OIDAuthorizationService.discoverServiceConfigurationForIssuer(issuer!) {
             config, error in
-            
+        
             if ((config == nil)) {
                 print("Error retrieving discovery document: \(error?.localizedDescription)")
                 return
             }
             print("Retrieved configuration: \(config!)")
             
-            // Build Authentication Request
+            // Build Authentication Request for idToken
             let request = OIDAuthorizationRequest(configuration: config!,
                                                   clientId: self.appConfig.kClientID,
                                                   scopes: [
                                                     OIDScopeOpenID,
                                                     OIDScopeProfile,
                                                     OIDScopeEmail,
-                                                    OIDScopePhone,
-                                                    OIDScopeAddress,
-                                                    "groups",
-                                                    "offline_access",
-                                                    "appointments:read",
-                                                    "providers:read",
-                                                    "appointments:cancel"
-                ],
+                                                    "offline_access"
+            ],
                                                   redirectURL: redirectURI!,
                                                   responseType: OIDResponseTypeCode,
                                                   additionalParameters: nil)
@@ -130,11 +186,10 @@ class HomeViewController: UIViewController, OIDAuthStateChangeDelegate {
                     authorizationResponse, error in
                     if(authorizationResponse != nil) {
                         self.setAuthState(authorizationResponse)
-                        let accessToken = authorizationResponse!.lastTokenResponse!.accessToken!
-                        print("Access Token: \n\(accessToken)")
-                        print("Id Token: \n\(authorizationResponse!.lastTokenResponse!.idToken!)")
-                        self.pullAttributes()
-                        
+                        self.authorizationServerConfig(appDelegate){
+                            response, err in
+                            self.pullAttributes()
+                        }
                     } else {
                         print("Authorization Error: \(error!.localizedDescription)")
                         self.setAuthState(nil)
@@ -203,6 +258,7 @@ class HomeViewController: UIViewController, OIDAuthStateChangeDelegate {
         postDataTask.resume()
     }
     
+    /* Create local user based on OIDC idToken */
     func createUser(jsonDictionaryOrArray : Dictionary<String,AnyObject>) {
         let newUser = AcmeUser (
             firstName: "\(jsonDictionaryOrArray["given_name"]!)",
@@ -212,27 +268,21 @@ class HomeViewController: UIViewController, OIDAuthStateChangeDelegate {
             picture : "\(jsonDictionaryOrArray["picture"]!)",
             id : "\(jsonDictionaryOrArray["sub"]!)"
         )
-        authState?.withFreshTokensPerformAction(){
-            accessToken, idToken, error in
-            if(error != nil){
-                print("Error fetching fresh tokens: \(error!.localizedDescription)")
-                return
-            }
-            loadAppointments(accessToken!, id: newUser.id) {
-                response, err in
-                appointmentData = response!
-
-            }
-            loadPhysicians(accessToken!) {
-                response, err in
-                physicians = response!
-            
-                print(physicians)
-                // Segue after load
-                let home = self.storyboard?.instantiateViewControllerWithIdentifier("MainController")
-                self.presentViewController(home!, animated: false, completion: nil)
-            }
-
+        
+        /* Load appointments from auth server */
+        let accessToken = authServerState?.lastTokenResponse?.accessToken
+        loadAppointments(accessToken!, id: newUser.id) {
+            response, err in
+            appointmentData = response!
+        }
+        
+        /* Load physicians from auth server */
+        loadPhysicians(accessToken!) {
+            response, err in
+            physicians = response!
+            // Segue after load
+            let home = self.storyboard?.instantiateViewControllerWithIdentifier("MainController")
+            self.presentViewController(home!, animated: false, completion: nil)
         }
         
         user = newUser

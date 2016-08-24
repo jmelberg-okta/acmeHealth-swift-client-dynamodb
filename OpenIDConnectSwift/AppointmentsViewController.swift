@@ -26,31 +26,55 @@ class AppointmentsViewController: UITableViewController, OIDAuthStateChangeDeleg
     
     // AppAuth authState
     var authState:OIDAuthState?
+    var authServerState: OIDAuthState?
     
+    
+    /************************************************/
+    /**********  Begin AppAuth Boilerplate **********/
+    /************************************************/
+
     /**  Saves the current authState into NSUserDefaults  */
     func saveState() {
+        if(authState == nil && authServerState == nil){
+            NSUserDefaults.standardUserDefaults().setObject(nil, forKey: appConfig.kAppAuthExampleAuthStateKey)
+            NSUserDefaults.standardUserDefaults().setObject(nil, forKey: appConfig.kAppAuthExampleAuthStateServerKey)
+        }
         if(authState != nil){
             let archivedAuthState = NSKeyedArchiver.archivedDataWithRootObject(authState!)
             NSUserDefaults.standardUserDefaults().setObject(archivedAuthState, forKey: appConfig.kAppAuthExampleAuthStateKey)
-            NSUserDefaults.standardUserDefaults().setObject(true, forKey: "active")
-            NSUserDefaults.standardUserDefaults().synchronize()
+            
         }
-        else { NSUserDefaults.standardUserDefaults().setObject(nil, forKey: appConfig.kAppAuthExampleAuthStateKey) }
+        if (authServerState != nil) {
+            let archivedAuthServerState = NSKeyedArchiver.archivedDataWithRootObject(authServerState!)
+            NSUserDefaults.standardUserDefaults().setObject(archivedAuthServerState, forKey: appConfig.kAppAuthExampleAuthStateServerKey)
+        }
+        
         NSUserDefaults.standardUserDefaults().synchronize()
     }
     
     /**  Loads the current authState from NSUserDefaults */
     func loadState() {
         if let archivedAuthState = NSUserDefaults.standardUserDefaults().objectForKey(appConfig.kAppAuthExampleAuthStateKey) as? NSData {
-            if let authState = NSKeyedUnarchiver.unarchiveObjectWithData(archivedAuthState) as? OIDAuthState {
-                setAuthState(authState)
-            } else { return }
+            if let archivedAuthServerState = NSUserDefaults.standardUserDefaults().objectForKey(appConfig.kAppAuthExampleAuthStateServerKey) as? NSData {
+                if let authState = NSKeyedUnarchiver.unarchiveObjectWithData(archivedAuthState) as? OIDAuthState {
+                    if let authServerState = NSKeyedUnarchiver.unarchiveObjectWithData(archivedAuthServerState) as? OIDAuthState {
+                        setAuthServerState(authServerState)
+                    }
+                    setAuthState(authState)
+                } else {    return  }
+            }
         } else { return }
     }
     
     private func setAuthState(authState:OIDAuthState?){
         self.authState = authState
         self.authState?.stateChangeDelegate = self
+        self.stateChanged()
+    }
+    
+    private func setAuthServerState(authState:OIDAuthState?){
+        self.authServerState = authState
+        self.authServerState?.stateChangeDelegate = self
         self.stateChanged()
     }
     
@@ -66,8 +90,10 @@ class AppointmentsViewController: UITableViewController, OIDAuthStateChangeDeleg
             return true
         } else { return false }
     }
-/************************************************/
 
+/************************************************/
+/***********  End AppAuth Boilerplate ***********/
+/************************************************/
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -86,7 +112,7 @@ class AppointmentsViewController: UITableViewController, OIDAuthStateChangeDeleg
     }
     
     func refresh(sender: AnyObject) {
-        loadAppointments((authState?.lastTokenResponse?.accessToken)!, id: user.id) {
+        loadAppointments((authServerState?.lastTokenResponse?.accessToken)!, id: user.id) {
             response, err in
             appointmentData = response!
             self.currentAppointments = appointmentData
@@ -141,8 +167,10 @@ class AppointmentsViewController: UITableViewController, OIDAuthStateChangeDeleg
 
             pictureLabel.layer.masksToBounds = false
             pictureLabel.clipsToBounds = true
-
-            pictureLabel.image = UIImage(named: "\(appointment["providerId"]!)")
+            
+//            pictureLabel.image = UIImage(named: "\(appointment["providerId"]!)")
+            pictureLabel.image = loadProviderImage(getPhysician("\(appointment["providerId"]!)")!)
+            
             if let status = appointment["status"] as? String! {
                 if status == "REQUESTED" {
                     pictureLabel.layer.borderColor = UIColor.yellowColor().CGColor
@@ -216,19 +244,11 @@ class AppointmentsViewController: UITableViewController, OIDAuthStateChangeDeleg
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
             
             let appointment = currentAppointments[indexPath.row] as NSDictionary
-            authState?.withFreshTokensPerformAction(){
-                accessToken, idToken, error in
-                if(error != nil){
-                    print("Error fetching fresh tokens: \(error!.localizedDescription)")
-                    return
-                }
-
-                removeAppointment(accessToken!, id: appointment["_id"] as! String) {
-                    response, err in
-                        print(response!)
-                        self.refresh(self)
-                
-                }
+            let accessToken = authServerState!.lastTokenResponse?.accessToken
+            removeAppointment(accessToken!, id: appointment["_id"] as! String) {
+                response, err in
+                print(response!)
+                self.refresh(self)
             }
         }
     }

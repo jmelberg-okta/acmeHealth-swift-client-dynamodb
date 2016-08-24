@@ -23,14 +23,18 @@ class OktaConfiguration {
     let kClientID: String!
     let kRedirectURI: String!
     let kAppAuthExampleAuthStateKey: String!
-    let apiEndpoint: NSURL!
+    let kAppAuthExampleAuthStateServerKey: String!
+    let kAuthorizationServerEndpoint: NSURL!
+    let kAuthorizationTokenEndpoint: NSURL!
     
     init(){
         kIssuer = "https://jordandemo.oktapreview.com"                  // Base url of Okta Developer domain
-        kClientID = "Jw1nyzbsNihSuOETY3R1"                           // Client ID of Application
+        kClientID = "Jw1nyzbsNihSuOETY3R1"                              // Client ID of Application
         kRedirectURI = "com.oktapreview.jordandemo:/oauth"              // Reverse DNS notation of base url with oauth route
-        kAppAuthExampleAuthStateKey = "com.okta.openid.authState"
-        apiEndpoint = NSURL(string: "https://example.com/protected") // Resource Server URL
+        kAppAuthExampleAuthStateKey = "com.okta.oauth.authState"        // Key for NSUser
+        kAppAuthExampleAuthStateServerKey = "com.okta.oauth.authServerState"
+        kAuthorizationServerEndpoint = NSURL(string: "https://jordandemo.oktapreview.com/oauth2/aus7xbiefo72YS2QW0h7/v1/authorize")
+        kAuthorizationTokenEndpoint = NSURL(string: "https://jordandemo.oktapreview.com/oauth2/aus7xbiefo72YS2QW0h7/v1/token")
     }
 }
 
@@ -79,6 +83,7 @@ class Provider {
     }
 }
 
+/* Given physican id -> returns physician name */
 func getPhysician(id: String) -> String? {
     for physician in physicians {
         let physician = physician as NSDictionary
@@ -89,6 +94,7 @@ func getPhysician(id: String) -> String? {
     return nil
 }
 
+/* Given physican name -> returns physician id */
 func getPhysicianID(name: String) -> String? {
     for physician in physicians {
         let physician = physician as NSDictionary
@@ -99,6 +105,18 @@ func getPhysicianID(name: String) -> String? {
     return nil
 }
 
+/* Given physican id -> returns physician profile image url */
+func getPhysicianUrl(id: String) -> String? {
+    for physician in physicians {
+        let physician = physician as NSDictionary
+        if (id == "\(physician["id"]!)") {
+            return "\(physician["profileImageUrl"]!)"
+        }
+    }
+    return nil
+}
+
+/* Given accessToken and provider/user id -> returns all appointments */
 func loadAppointments(token: String, id: String, completionHandler: ([NSDictionary]?, NSError?) -> ()){
     let headers = ["Authorization" : "Bearer \(token)",
                    "Accept" :  "application/json"]
@@ -112,6 +130,7 @@ func loadAppointments(token: String, id: String, completionHandler: ([NSDictiona
     }
 }
 
+/* Given accessToken  -> returns all providers */
 func loadPhysicians(token: String, completionHandler: ([NSDictionary]?, NSError?) -> ()){
     let headers = ["Authorization" : "Bearer \(token)",
                    "Accept" :  "application/json"]
@@ -124,6 +143,7 @@ func loadPhysicians(token: String, completionHandler: ([NSDictionary]?, NSError?
     }
 }
 
+/* Creates new appointment */
 func createAppointment(params: [String:String!], completionHandler: (NSDictionary?, NSError?) -> ()){
     Alamofire.request(.POST, API_URL + "/appointments", parameters: params)
     .responseJSON { response in
@@ -133,6 +153,7 @@ func createAppointment(params: [String:String!], completionHandler: (NSDictionar
     }
 }
 
+/* Deletes appointment */
 func removeAppointment(token: String, id : String, completionHandler: (Bool?, NSError?) -> ()){
     let headers = ["Authorization" : "Bearer \(token)",
                    "Accept" :  "application/json"]
@@ -146,10 +167,10 @@ func removeAppointment(token: String, id : String, completionHandler: (Bool?, NS
 
 }
 
-func getActiveUser() -> AcmeUser {
-    return user
-}
 
+func getActiveUser() -> AcmeUser { return user}
+
+/* Loads user image */
 func loadImage() -> UIImage {
     if let url = NSURL(string: activeUser.picture) {
         if let data = NSData(contentsOfURL: url) {
@@ -159,4 +180,15 @@ func loadImage() -> UIImage {
     return UIImage(named: "acme-logo")!
 }
 
+
+/* Loads provider image */
+func loadProviderImage(name: String) -> UIImage {
+    let urlString = getPhysicianUrl(getPhysicianID(name)!)
+    if let url = NSURL(string: urlString!) {
+        if let data = NSData(contentsOfURL: url) {
+            return UIImage(data: data)!
+        }
+    }
+    return UIImage(named: "acme-logo")!
+}
 

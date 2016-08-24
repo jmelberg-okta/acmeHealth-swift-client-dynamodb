@@ -110,6 +110,7 @@ class RequestAppointmentViewController: UITableViewController, UIPickerViewDataS
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         doctorLabel.text = physicians[row]["name"] as? String
+        togglePicker()
     }
     
         
