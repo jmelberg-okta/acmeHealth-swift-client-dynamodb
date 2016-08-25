@@ -12,6 +12,8 @@
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundleDisplayName</key>
+	<string>AcmeHealth</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -25,7 +27,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.oktapreview.jordandemo</string>
+				<string>com.oktapreview.example</string>
 			</array>
 		</dict>
 	</array>

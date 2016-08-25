@@ -28,18 +28,17 @@ class OktaConfiguration {
     let kAuthorizationTokenEndpoint: NSURL!
     
     init(){
-        kIssuer = "https://jordandemo.oktapreview.com"                  // Base url of Okta Developer domain
-        kClientID = "Jw1nyzbsNihSuOETY3R1"                              // Client ID of Application
-        kRedirectURI = "com.oktapreview.jordandemo:/oauth"              // Reverse DNS notation of base url with oauth route
+        kIssuer = "https://example.oktapreview.com"                  // Base url of Okta Developer domain
+        kClientID = "GJv1mKQtUAUbTalBeQLs"                              // Client ID of Application
+        kRedirectURI = "com.oktapreview.example:/oauth"              // Reverse DNS notation of base url with oauth route
         kAppAuthExampleAuthStateKey = "com.okta.oauth.authState"        // Key for NSUser
         kAppAuthExampleAuthStateServerKey = "com.okta.oauth.authServerState"
-        kAuthorizationServerEndpoint = NSURL(string: "https://jordandemo.oktapreview.com/oauth2/aus7xbiefo72YS2QW0h7/v1/authorize")
-        kAuthorizationTokenEndpoint = NSURL(string: "https://jordandemo.oktapreview.com/oauth2/aus7xbiefo72YS2QW0h7/v1/token")
+        kAuthorizationServerEndpoint = NSURL(string: "https://example.oktapreview.com/oauth2/aus80l8xhvgeoUgwr0h7/v1/authorize")
+        kAuthorizationTokenEndpoint = NSURL(string: "https://example.oktapreview.com/oauth2/aus80l8xhvgeoUgwr0h7/v1/token")
     }
 }
 
 let config = OktaConfiguration()
-
 
 // Sample Data
 var appointmentData: [NSDictionary]!

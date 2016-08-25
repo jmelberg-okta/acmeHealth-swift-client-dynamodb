@@ -363,7 +363,7 @@
 				INFOPLIST_FILE = OpenIDConnectSwift/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.okta.jmelberg.OpenIDConnectSwift;
+				PRODUCT_BUNDLE_IDENTIFIER = com.okta.demo.acmeHealth;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
@@ -375,14 +375,14 @@
 			baseConfigurationReference = 08D36EB095FD9E1BF02D1FE7 /* Pods-OpenIDConnectSwift.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Okta, Inc";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Okta, Inc";
 				INFOPLIST_FILE = OpenIDConnectSwift/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.okta.jmelberg.OpenIDConnectSwift;
+				PRODUCT_BUNDLE_IDENTIFIER = com.okta.demo.acmeHealth;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "67db255d-10d6-4667-887f-94163bc17cb5";
 				SDKROOT = iphoneos;
 			};
 			name = Release;
