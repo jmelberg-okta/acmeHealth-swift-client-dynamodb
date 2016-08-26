@@ -24,8 +24,11 @@ class OktaConfiguration {
     let kRedirectURI: String!
     let kAppAuthExampleAuthStateKey: String!
     let kAppAuthExampleAuthStateServerKey: String!
+    let authorizationServerURL: String!
     let kAuthorizationServerEndpoint: NSURL!
     let kAuthorizationTokenEndpoint: NSURL!
+    let authorizationServerScopes: [String]!
+
     
     init(){
         kIssuer = "https://example.oktapreview.com"                  // Base url of Okta Developer domain
@@ -33,8 +36,15 @@ class OktaConfiguration {
         kRedirectURI = "com.oktapreview.example:/oauth"              // Reverse DNS notation of base url with oauth route
         kAppAuthExampleAuthStateKey = "com.okta.oauth.authState"        // Key for NSUser
         kAppAuthExampleAuthStateServerKey = "com.okta.oauth.authServerState"
+        authorizationServerURL = "https://20136853.ngrok.io"
         kAuthorizationServerEndpoint = NSURL(string: "https://example.oktapreview.com/oauth2/aus80l8xhvgeoUgwr0h7/v1/authorize")
         kAuthorizationTokenEndpoint = NSURL(string: "https://example.oktapreview.com/oauth2/aus80l8xhvgeoUgwr0h7/v1/token")
+        authorizationServerScopes = [
+            "appointments:read",
+            "appointments:write",
+            "appointments:cancel",
+            "providers:read"
+        ]
     }
 }
 
@@ -44,8 +54,6 @@ let config = OktaConfiguration()
 var appointmentData: [NSDictionary]!
 var user:AcmeUser!
 var physicians : [NSDictionary]!
-
-var API_URL = "https://20136853.ngrok.io"
 
 class AcmeUser {
     var firstName : String!
@@ -69,16 +77,6 @@ class AcmeUser {
         self.physician = "Dr. John Doe"
         self.picture = picture
         self.id = id
-    }
-}
-
-class Provider {
-    var id : String!
-    var name : String!
-    
-    init(id: String, name : String) {
-        self.id = id
-        self.name = name
     }
 }
 
@@ -119,7 +117,7 @@ func getPhysicianUrl(id: String) -> String? {
 func loadAppointments(token: String, id: String, completionHandler: ([NSDictionary]?, NSError?) -> ()){
     let headers = ["Authorization" : "Bearer \(token)",
                    "Accept" :  "application/json"]
-    Alamofire.request(.GET, API_URL + "/appointments/"+id, headers: headers)
+    Alamofire.request(.GET, config.authorizationServerURL + "/appointments/"+id, headers: headers)
         .validate()
         .responseJSON { response in
             if let JSON = response.result.value {
@@ -133,7 +131,7 @@ func loadAppointments(token: String, id: String, completionHandler: ([NSDictiona
 func loadPhysicians(token: String, completionHandler: ([NSDictionary]?, NSError?) -> ()){
     let headers = ["Authorization" : "Bearer \(token)",
                    "Accept" :  "application/json"]
-    Alamofire.request(.GET, API_URL + "/providers", headers : headers)
+    Alamofire.request(.GET, config.authorizationServerURL + "/providers", headers : headers)
         .validate()
         .responseJSON { response in
             if let JSON = response.result.value {
@@ -144,7 +142,7 @@ func loadPhysicians(token: String, completionHandler: ([NSDictionary]?, NSError?
 
 /* Creates new appointment */
 func createAppointment(params: [String:String!], completionHandler: (NSDictionary?, NSError?) -> ()){
-    Alamofire.request(.POST, API_URL + "/appointments", parameters: params)
+    Alamofire.request(.POST, config.authorizationServerURL + "/appointments", parameters: params)
     .responseJSON { response in
         if let JSON = response.result.value {
             completionHandler(JSON as? NSDictionary, nil)
@@ -156,7 +154,7 @@ func createAppointment(params: [String:String!], completionHandler: (NSDictionar
 func removeAppointment(token: String, id : String, completionHandler: (Bool?, NSError?) -> ()){
     let headers = ["Authorization" : "Bearer \(token)",
                    "Accept" :  "application/json"]
-    Alamofire.request(.DELETE, API_URL + "/appointments/" + id, headers: headers)
+    Alamofire.request(.DELETE, config.authorizationServerURL + "/appointments/" + id, headers: headers)
     .validate()
     .responseJSON { response in
         if response.response?.statusCode == 204{
@@ -166,8 +164,9 @@ func removeAppointment(token: String, id : String, completionHandler: (Bool?, NS
 
 }
 
-
+// For DEMO Conversation
 func getActiveUser() -> AcmeUser { return user}
+func getActiveProvider() -> NSDictionary {return physicians[0]}
 
 /* Loads user image */
 func loadImage() -> UIImage {

@@ -128,13 +128,9 @@ class HomeViewController: UIViewController, OIDAuthStateChangeDelegate {
         let config = OIDServiceConfiguration.init(authorizationEndpoint: authorizationEndpoint, tokenEndpoint: tokenEndpoint)
         
         // Build Authentication Request for accessToken
-        let request = OIDAuthorizationRequest(configuration: config!, clientId: appConfig.kClientID,
-                                              scopes: [
-                                                "appointments:read",
-                                                "appointments:write",
-                                                "appointments:cancel",
-                                                "providers:read"
-                                                ],
+        let request = OIDAuthorizationRequest(configuration: config!,
+                                              clientId: appConfig.kClientID,
+                                              scopes: appConfig.authorizationServerScopes,
                                               redirectURL: NSURL(string: appConfig.kRedirectURI)!,
                                               responseType: OIDResponseTypeCode,
                                               additionalParameters: nil)
@@ -174,7 +170,7 @@ class HomeViewController: UIViewController, OIDAuthStateChangeDelegate {
                                                     OIDScopeProfile,
                                                     OIDScopeEmail,
                                                     "offline_access"
-            ],
+                                                  ],
                                                   redirectURL: redirectURI!,
                                                   responseType: OIDResponseTypeCode,
                                                   additionalParameters: nil)
@@ -260,12 +256,13 @@ class HomeViewController: UIViewController, OIDAuthStateChangeDelegate {
     
     /* Create local user based on OIDC idToken */
     func createUser(jsonDictionaryOrArray : Dictionary<String,AnyObject>) {
+        
         let newUser = AcmeUser (
             firstName: "\(jsonDictionaryOrArray["given_name"]!)",
-            lastName: "\(jsonDictionaryOrArray["family_name"]!)",
+            lastName: "\(jsonDictionaryOrArray["family_name"]!)" ,
             email : "\(jsonDictionaryOrArray["email"]!)",
             provider: "Healthcare Cross",
-            picture : "\(jsonDictionaryOrArray["picture"]!)",
+            picture : (jsonDictionaryOrArray["picture"] != nil ? "\(jsonDictionaryOrArray["picture"]!)" : "https://randomuser.me/api/portraits/thumb/men/1.jpg"),
             id : "\(jsonDictionaryOrArray["sub"]!)"
         )
         

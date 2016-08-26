@@ -69,7 +69,6 @@ class ProfileViewController: UITableViewController, UIPickerViewDataSource, UIPi
         self.providerPicker.delegate = self
         self.tableView.reloadData()
 
-
     }
 
     

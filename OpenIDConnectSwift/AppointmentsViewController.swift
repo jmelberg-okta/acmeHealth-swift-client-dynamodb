@@ -28,6 +28,9 @@ class AppointmentsViewController: UITableViewController, OIDAuthStateChangeDeleg
     var authState:OIDAuthState?
     var authServerState: OIDAuthState?
     
+    // UILabel for "No Appointments
+    let empty: UILabel = UILabel()
+    
     
     /************************************************/
     /**********  Begin AppAuth Boilerplate **********/
@@ -97,17 +100,8 @@ class AppointmentsViewController: UITableViewController, OIDAuthStateChangeDeleg
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        currentAppointments = appointmentData
+        
         self.loadState()
-        if currentAppointments.count < 1 {
-            let empty: UILabel = UILabel(frame: CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height))
-            empty.text = "No appointments available"
-            empty.font = empty.font.fontWithSize(25)
-            empty.textColor = UIColor(red: 154.0/255.0, green: 157.0/255.0, blue: 156.0/255.0, alpha: 1.0)
-            empty.backgroundColor = UIColor(red:0.98, green:0.98, blue:0.98, alpha:1.0)
-            empty.textAlignment = NSTextAlignment.Center
-            self.tableView.backgroundView = empty
-        }
         self.refreshControl?.addTarget(self, action: #selector(AppointmentsViewController.refresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
     }
     
@@ -116,21 +110,6 @@ class AppointmentsViewController: UITableViewController, OIDAuthStateChangeDeleg
             response, err in
             appointmentData = response!
             self.currentAppointments = appointmentData
-            let empty: UILabel = UILabel(frame: CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height))
-            empty.text = "No appointments available"
-            empty.font = empty.font.fontWithSize(25)
-            empty.textColor = UIColor(red: 154.0/255.0, green: 157.0/255.0, blue: 156.0/255.0, alpha: 1.0)
-            empty.backgroundColor = UIColor.groupTableViewBackgroundColor()
-            empty.textAlignment = NSTextAlignment.Center
-            
-            if self.currentAppointments.count < 1 {
-                self.tableView.backgroundView = empty
-            } else {
-                self.tableView.backgroundColor = UIColor.groupTableViewBackgroundColor()
-                empty.text = ""
-                self.tableView.backgroundView = empty;
-            }
-
             self.tableView.reloadData()
             self.refreshControl?.endRefreshing()
         }
@@ -139,6 +118,8 @@ class AppointmentsViewController: UITableViewController, OIDAuthStateChangeDeleg
     
     override func viewWillAppear(animated: Bool) {
         self.tableView.backgroundColor = UIColor.groupTableViewBackgroundColor()
+        self.refresh("")
+        self.tableView.reloadData()
 
     }
 
@@ -154,7 +135,22 @@ class AppointmentsViewController: UITableViewController, OIDAuthStateChangeDeleg
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return currentAppointments.count
+        if currentAppointments.count == 0 {
+            empty.frame = CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height)
+            empty.text = "No appointments available"
+            empty.font = empty.font.fontWithSize(25)
+            empty.textColor = UIColor(red: 154.0/255.0, green: 157.0/255.0, blue: 156.0/255.0, alpha: 1.0)
+            empty.backgroundColor = UIColor(red:0.98, green:0.98, blue:0.98, alpha:1.0)
+            empty.textAlignment = NSTextAlignment.Center
+            self.tableView.backgroundView = empty
+            return 0
+        } else {
+            self.tableView.backgroundColor = UIColor.groupTableViewBackgroundColor()
+            empty.text = ""
+            self.tableView.backgroundView = empty;
+            return currentAppointments.count
+
+        }
     }
 
     
