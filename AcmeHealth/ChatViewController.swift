@@ -1,8 +1,9 @@
 //
 //  ChatViewController.swift
-//  SwiftExample
+//  AcmeHealth
 //
 //  Created by Dan Leonard on 5/11/16.
+//  Modified by Jordan Melberg on 8/10/16.
 //  Copyright © 2016 MacMeDan. All rights reserved.
 //
 
