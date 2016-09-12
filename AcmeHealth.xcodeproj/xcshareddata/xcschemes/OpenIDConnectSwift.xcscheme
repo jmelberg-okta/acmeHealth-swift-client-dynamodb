@@ -17,7 +17,7 @@
                BlueprintIdentifier = "710124AE1D11BCD9009F420A"
                BuildableName = "OpenIDConnectSwift.app"
                BlueprintName = "OpenIDConnectSwift"
-               ReferencedContainer = "container:OpenIDConnectSwift.xcodeproj">
+               ReferencedContainer = "container:AcmeHealth.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,7 +35,7 @@
             BlueprintIdentifier = "710124AE1D11BCD9009F420A"
             BuildableName = "OpenIDConnectSwift.app"
             BlueprintName = "OpenIDConnectSwift"
-            ReferencedContainer = "container:OpenIDConnectSwift.xcodeproj">
+            ReferencedContainer = "container:AcmeHealth.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -58,7 +58,7 @@
             BlueprintIdentifier = "710124AE1D11BCD9009F420A"
             BuildableName = "OpenIDConnectSwift.app"
             BlueprintName = "OpenIDConnectSwift"
-            ReferencedContainer = "container:OpenIDConnectSwift.xcodeproj">
+            ReferencedContainer = "container:AcmeHealth.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -77,7 +77,7 @@
             BlueprintIdentifier = "710124AE1D11BCD9009F420A"
             BuildableName = "OpenIDConnectSwift.app"
             BlueprintName = "OpenIDConnectSwift"
-            ReferencedContainer = "container:OpenIDConnectSwift.xcodeproj">
+            ReferencedContainer = "container:AcmeHealth.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

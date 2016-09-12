@@ -16,7 +16,6 @@
  */
 
 import UIKit
-import AppAuth
 
 class ProfileViewController: UITableViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     

@@ -15,45 +15,16 @@
  * limitations under the License.
  */
 
-import Foundation
-import Alamofire
+import UIKit
 
-class OktaConfiguration {
-    let kIssuer: String!
-    let kClientID: String!
-    let kRedirectURI: String!
-    let kAppAuthExampleAuthStateKey: String!
-    let kAppAuthExampleAuthStateServerKey: String!
-    let authorizationServerURL: String!
-    let kAuthorizationServerEndpoint: NSURL!
-    let kAuthorizationTokenEndpoint: NSURL!
-    let authorizationServerScopes: [String]!
 
-    
-    init(){
-        kIssuer = "https://example.oktapreview.com"                  // Base url of Okta Developer domain
-        kClientID = "GJv1mKQtUAUbTalBeQLs"                              // Client ID of Application
-        kRedirectURI = "com.oktapreview.example:/oauth"              // Reverse DNS notation of base url with oauth route
-        kAppAuthExampleAuthStateKey = "com.okta.oauth.authState"        // Key for NSUser
-        kAppAuthExampleAuthStateServerKey = "com.okta.oauth.authServerState"
-        authorizationServerURL = "https://20136853.ngrok.io"
-        kAuthorizationServerEndpoint = NSURL(string: "https://example.oktapreview.com/oauth2/aus80l8xhvgeoUgwr0h7/v1/authorize")
-        kAuthorizationTokenEndpoint = NSURL(string: "https://example.oktapreview.com/oauth2/aus80l8xhvgeoUgwr0h7/v1/token")
-        authorizationServerScopes = [
-            "appointments:read",
-            "appointments:write",
-            "appointments:cancel",
-            "providers:read"
-        ]
-    }
-}
-
-let config = OktaConfiguration()
-
-// Sample Data
+// Sample Data & Global Vars
 var appointmentData: [NSDictionary]!
-var user:AcmeUser!
+var user: AcmeUser!
 var physicians : [NSDictionary]!
+
+let config: OktaConfiguration = OktaConfiguration()
+let appAuth: AppAuthExtension = AppAuthExtension()
 
 class AcmeUser {
     var firstName : String!
@@ -113,61 +84,6 @@ func getPhysicianUrl(id: String) -> String? {
     return nil
 }
 
-/* Given accessToken and provider/user id -> returns all appointments */
-func loadAppointments(token: String, id: String, completionHandler: ([NSDictionary]?, NSError?) -> ()){
-    let headers = ["Authorization" : "Bearer \(token)",
-                   "Accept" :  "application/json"]
-    Alamofire.request(.GET, config.authorizationServerURL + "/appointments/"+id, headers: headers)
-        .validate()
-        .responseJSON { response in
-            if let JSON = response.result.value {
-                // Only pull appointments that match patient ID
-                completionHandler(JSON as? [NSDictionary], nil)
-            }
-    }
-}
-
-/* Given accessToken  -> returns all providers */
-func loadPhysicians(token: String, completionHandler: ([NSDictionary]?, NSError?) -> ()){
-    let headers = ["Authorization" : "Bearer \(token)",
-                   "Accept" :  "application/json"]
-    Alamofire.request(.GET, config.authorizationServerURL + "/providers", headers : headers)
-        .validate()
-        .responseJSON { response in
-            if let JSON = response.result.value {
-                completionHandler(JSON as? [NSDictionary], nil)
-            }
-    }
-}
-
-/* Creates new appointment */
-func createAppointment(params: [String:String!], completionHandler: (NSDictionary?, NSError?) -> ()){
-    Alamofire.request(.POST, config.authorizationServerURL + "/appointments", parameters: params)
-    .responseJSON { response in
-        if let JSON = response.result.value {
-            completionHandler(JSON as? NSDictionary, nil)
-        }
-    }
-}
-
-/* Deletes appointment */
-func removeAppointment(token: String, id : String, completionHandler: (Bool?, NSError?) -> ()){
-    let headers = ["Authorization" : "Bearer \(token)",
-                   "Accept" :  "application/json"]
-    Alamofire.request(.DELETE, config.authorizationServerURL + "/appointments/" + id, headers: headers)
-    .validate()
-    .responseJSON { response in
-        if response.response?.statusCode == 204{
-            completionHandler(true, nil)
-        }
-    }
-
-}
-
-// For DEMO Conversation
-func getActiveUser() -> AcmeUser { return user}
-func getActiveProvider() -> NSDictionary {return physicians[0]}
-
 /* Loads user image */
 func loadImage() -> UIImage {
     if let url = NSURL(string: activeUser.picture) {
@@ -175,6 +91,7 @@ func loadImage() -> UIImage {
             return UIImage(data: data)!
         }
     }
+    // Return default
     return UIImage(named: "acme-logo")!
 }
 
@@ -187,6 +104,13 @@ func loadProviderImage(name: String) -> UIImage {
             return UIImage(data: data)!
         }
     }
+    // Return default
     return UIImage(named: "acme-logo")!
 }
+
+/* Returns the active user */
+func getActiveUser() -> AcmeUser { return user }
+
+/* Returns the first physcian in list */
+func getActiveProvider() -> NSDictionary { return physicians[0] }
 
