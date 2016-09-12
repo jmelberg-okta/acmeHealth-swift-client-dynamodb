@@ -2,3 +2,4 @@
 *.
 /Pods
 /OpenIDConnectSwift.xcworkspace
+Podfile.lock
