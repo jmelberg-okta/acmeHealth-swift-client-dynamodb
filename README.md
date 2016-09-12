@@ -57,6 +57,11 @@ Once the project is cloned, install the required dependencies with [CocoaPods](h
 
 **Important:** Open `AcmeHealth.xcworkspace`. This file should be used to run/test your application.
 
+####Requirements
+- XCode 7.0+
+- Swift 2.0+
+- OS X 10.10+
+
 Update the `OktaConfiguration.swift` `OktaConfiguration` object:
 ```swift
 class OktaConfiguration {
