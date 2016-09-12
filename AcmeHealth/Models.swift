@@ -18,7 +18,7 @@
 import UIKit
 
 
-// Sample Data & Global Vars
+/** Sample Data & Global Vars */
 var appointmentData: [NSDictionary]!
 var user: AcmeUser!
 var physicians : [NSDictionary]!
@@ -26,6 +26,7 @@ var physicians : [NSDictionary]!
 let config: OktaConfiguration = OktaConfiguration()
 let appAuth: AppAuthExtension = AppAuthExtension()
 
+/** Create new user for lifecycle of open app */
 class AcmeUser {
     var firstName : String!
     var lastName : String!
@@ -51,7 +52,7 @@ class AcmeUser {
     }
 }
 
-/* Given physican id -> returns physician name */
+/** Given physican id -> returns physician name */
 func getPhysician(id: String) -> String? {
     for physician in physicians {
         let physician = physician as NSDictionary
@@ -62,7 +63,7 @@ func getPhysician(id: String) -> String? {
     return nil
 }
 
-/* Given physican name -> returns physician id */
+/** Given physican name -> returns physician id */
 func getPhysicianID(name: String) -> String? {
     for physician in physicians {
         let physician = physician as NSDictionary
@@ -73,7 +74,7 @@ func getPhysicianID(name: String) -> String? {
     return nil
 }
 
-/* Given physican id -> returns physician profile image url */
+/** Given physican id -> returns physician profile image url */
 func getPhysicianUrl(id: String) -> String? {
     for physician in physicians {
         let physician = physician as NSDictionary
@@ -84,7 +85,7 @@ func getPhysicianUrl(id: String) -> String? {
     return nil
 }
 
-/* Loads user image */
+/** Loads user image */
 func loadImage() -> UIImage {
     if let url = NSURL(string: activeUser.picture) {
         if let data = NSData(contentsOfURL: url) {
@@ -96,7 +97,7 @@ func loadImage() -> UIImage {
 }
 
 
-/* Loads provider image */
+/** Loads provider image */
 func loadProviderImage(name: String) -> UIImage {
     let urlString = getPhysicianUrl(getPhysicianID(name)!)
     if let url = NSURL(string: urlString!) {
@@ -104,13 +105,13 @@ func loadProviderImage(name: String) -> UIImage {
             return UIImage(data: data)!
         }
     }
-    // Return default
+    /** Return default */
     return UIImage(named: "acme-logo")!
 }
 
-/* Returns the active user */
+/** Returns the active user */
 func getActiveUser() -> AcmeUser { return user }
 
-/* Returns the first physcian in list */
+/** Returns the first physcian in list */
 func getActiveProvider() -> NSDictionary { return physicians[0] }
 

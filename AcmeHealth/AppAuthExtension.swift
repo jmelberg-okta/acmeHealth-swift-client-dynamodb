@@ -21,7 +21,7 @@ import Alamofire
 
 class AppAuthExtension: NSObject, OIDAuthStateChangeDelegate {
     
-    // AppAuth authState
+    /** AppAuth authStates */
     var authState:OIDAuthState?
     var authServerState: OIDAuthState?
     
@@ -83,7 +83,7 @@ class AppAuthExtension: NSObject, OIDAuthStateChangeDelegate {
         else { return false }
     }
     
-    /* Verify scopes contain required values */
+    /** Verify scopes contain required values */
     func formatScopes(scopes: [String]) -> [String] {
         let requiredScopes = ["openid", "profile", "email", "offline_access"]
         var scrubbedScopes = scopes
@@ -95,11 +95,12 @@ class AppAuthExtension: NSObject, OIDAuthStateChangeDelegate {
         return scrubbedScopes
     }
     
+    /** Handle Okta authentication -> Returns idToken where user attributes are parsed */
     func authenticate(controller: UIViewController, completionHandler: (Bool?, NSError?) -> ()){
         let issuer = NSURL(string: config.issuer)
         let redirectURI = NSURL(string: config.redirectURI)
         
-        // Discovers Endpoints
+        /** Discovers Endpoints via OIDC metadata */
         OIDAuthorizationService.discoverServiceConfigurationForIssuer(issuer!) {
             serviceConfig, error in
             
@@ -109,7 +110,7 @@ class AppAuthExtension: NSObject, OIDAuthStateChangeDelegate {
             }
             print("Retrieved configuration: \(serviceConfig!)")
             
-            // Build Authentication Request for idToken
+            /** Build Authentication Request for idToken */
             let scrubbedScopes = self.formatScopes(config.idTokenScopes)
             let request = OIDAuthorizationRequest(configuration: serviceConfig!,
                                                   clientId: config.clientID,
@@ -119,9 +120,9 @@ class AppAuthExtension: NSObject, OIDAuthStateChangeDelegate {
                                                   additionalParameters: nil)
             let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
             
-            print("Initiating Okta Authorization Request: \(request!)")
+            print("Initiating Okta Authorization Request: \(request)")
             appDelegate.currentAuthorizationFlow =
-                OIDAuthState.authStateByPresentingAuthorizationRequest(request!, presentingViewController: controller){
+                OIDAuthState.authStateByPresentingAuthorizationRequest(request, presentingViewController: controller){
                     authorizationResponse, error in
                     if(authorizationResponse != nil) {
                         self.setAuthState(authorizationResponse)
@@ -134,9 +135,8 @@ class AppAuthExtension: NSObject, OIDAuthStateChangeDelegate {
         }
     }
     
+    /** Handle custom authorization server authentication -> Returns token for handshake between API */
     func authorizationServerConfig(controller: UIViewController, completionHandler: (Bool?, NSError?) -> ()) {
-        
-        // Manually configure Authorization Server Call
         
         let issuer = NSURL(string: config.authIssuer)
         OIDAuthorizationService.discoverServiceConfigurationForIssuer(issuer!) {
@@ -146,19 +146,19 @@ class AppAuthExtension: NSObject, OIDAuthStateChangeDelegate {
             }
             print("Retrieved configuration: \(authServerConfig!)")
             
-            // Build Authentication Request for accessToken
+            /** Build Authentication Request for accessToken */
             let request = OIDAuthorizationRequest(configuration: authServerConfig!,
                                                   clientId: config.clientID,
                                                   scopes: config.authorizationServerScopes,
                                                   redirectURL: NSURL(string: config.redirectURI)!,
                                                   responseType: OIDResponseTypeCode,
                                                   additionalParameters: nil)
-            print("Initiating Authorization Server Request: \(request!)")
+            print("Initiating Authorization Server Request: \(request)")
             
             let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
             
             appDelegate.currentAuthorizationFlow =
-                OIDAuthState.authStateByPresentingAuthorizationRequest(request!, presentingViewController: controller){
+                OIDAuthState.authStateByPresentingAuthorizationRequest(request, presentingViewController: controller){
                     authorizationResponse, error in
                     if(authorizationResponse != nil) {
                         self.setAuthServerState(authorizationResponse)
@@ -171,9 +171,9 @@ class AppAuthExtension: NSObject, OIDAuthStateChangeDelegate {
         }
     }
     
-    /* Calls userInfo endpoint and returns JSON reponse */
+    /** Calls userInfo endpoint and returns JSON reponse */
     func pullAttributes(completionHandler: (NSDictionary?, NSError?) ->()){
-        // Call userinfo endpoint to retrieve user info
+        /** Call userinfo endpoint to retrieve user info */
         let userinfoEndpoint = authState?.lastAuthorizationResponse
             .request.configuration.discoveryDocument?.userinfoEndpoint
         if(userinfoEndpoint  == nil ) {
@@ -181,7 +181,7 @@ class AppAuthExtension: NSObject, OIDAuthStateChangeDelegate {
             return
         }
 
-        // Update OIDC accessToken
+        /** Update OIDC accessToken */
         var token = authState?.lastTokenResponse?.accessToken
         authState?.withFreshTokensPerformAction(){
             accessToken, idToken, error in
@@ -189,11 +189,11 @@ class AppAuthExtension: NSObject, OIDAuthStateChangeDelegate {
                 print("Error fetching fresh tokens: \(error!.localizedDescription)")
                 return
             }
-            // Update accessToken
+            /** Update accessToken */
             if(token != accessToken){ token = accessToken }
         }
         
-        /* Given accessToken  -> returns all providers */
+        /** Given accessToken  -> returns all providers */
         func callUserInfoEndpoint(token: String, url: String, completionHandler: (NSDictionary?, NSError?) -> ()){
             let headers = ["Authorization" : "Bearer \(token)",
                            "Accept" :  "application/json"]
@@ -206,6 +206,7 @@ class AppAuthExtension: NSObject, OIDAuthStateChangeDelegate {
             }
         }
         
+        /** Call /userinfo from discovery document */
         callUserInfoEndpoint(token!, url: userinfoEndpoint!.absoluteString) {
             response, err in
             completionHandler(response!, nil)

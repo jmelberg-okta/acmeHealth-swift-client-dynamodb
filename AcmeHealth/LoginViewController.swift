@@ -29,21 +29,21 @@ class LoginViewController: UIViewController {
         }
         NSUserDefaults.standardUserDefaults().synchronize()
         
-        // Authenticate with Okta
+        /** Authenticate with Okta */
         if let authenticated = appAuth.loadState() {
             if authenticated == false {
                 appAuth.authenticate(self) {
                     response, err in
-                    // Set up authorization server
+                    /** Set up authorization server */
                     if response == true {
                         appAuth.authorizationServerConfig(self) {
                             response, err in
                             if response == true {
-                                // Pull user attributes by calling userInfo endpoint
+                                /** Pull user attributes by calling userInfo endpoint */
                                 appAuth.pullAttributes() {
                                     response, err in
                                     if err == nil{
-                                        // Create local user from attributes
+                                        /** Create local user from attributes */
                                         self.createUser(response!)
                                     } else {  print(err)}
                                 }
@@ -63,10 +63,9 @@ class LoginViewController: UIViewController {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
-    /* Create local user based on OIDC idToken */
+    /** Create local user based on OIDC idToken */
     func createUser(json : NSDictionary) {
 
         let newUser = AcmeUser (
@@ -78,10 +77,10 @@ class LoginViewController: UIViewController {
             id : "\(json["sub"]!)"
         )
         
-        // If no user ID -> Login again
+        /** If no user ID -> Login again */
         if newUser.id == nil {   self.navigationController?.popToRootViewControllerAnimated(true) }
         
-        /* Load appointments from auth server */
+        /** Load appointments from auth server */
         let accessToken = appAuth.authServerState?.lastTokenResponse?.accessToken
         
         loadAppointments(accessToken!, id: newUser.id) {
@@ -89,7 +88,7 @@ class LoginViewController: UIViewController {
             appointmentData = response!
         }
         
-        /* Load physicians from auth server */
+        /** Load physicians from auth server */
         loadPhysicians(accessToken!) {
             response, err in
             physicians = response!

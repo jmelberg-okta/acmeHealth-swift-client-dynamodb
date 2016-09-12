@@ -38,13 +38,13 @@ class ProfileViewController: UITableViewController, UIPickerViewDataSource, UIPi
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Set profile content
+
         print("User: \(user.firstName) \(user.lastName)")
         profileName.text = "\(user.firstName) \(user.lastName)"
         profileEmail.text = "\(user.email)"
         providerName.text = "\(user.provider)"
         
-        // Load image
+        /** Load image */
         if let url = NSURL(string: user.picture){
             if let data = NSData(contentsOfURL: url) {
                 profileImage.image = UIImage(data: data)
@@ -53,7 +53,7 @@ class ProfileViewController: UITableViewController, UIPickerViewDataSource, UIPi
             profileImage.image = UIImage(named: "acme-logo")
         }
         
-        // Format img
+        /** Format img */
         profileImage.layer.cornerRadius = profileImage.frame.size.height / 2
         profileImage.layer.masksToBounds = false
         profileImage.clipsToBounds = true
@@ -73,7 +73,6 @@ class ProfileViewController: UITableViewController, UIPickerViewDataSource, UIPi
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -100,8 +99,6 @@ class ProfileViewController: UITableViewController, UIPickerViewDataSource, UIPi
     
     func toggleSubmit() {
         submitHidden = !submitHidden
-        
-        
     }
     
     func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
@@ -119,16 +116,5 @@ class ProfileViewController: UITableViewController, UIPickerViewDataSource, UIPi
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         physicianName.text = physicians[row]["name"] as? String
-    }
-
-    
-    func createAlert(alertTitle: String, alertMessage: String) {
-        let alert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .Alert)
-        alert.view.tintColor = UIColor.blackColor()
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel, handler: nil))
-        let textIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(10, 5, 50, 50)) as UIActivityIndicatorView
-        alert.view.addSubview(textIndicator)
-        
-        presentViewController(alert, animated: true, completion: nil)
     }
 }

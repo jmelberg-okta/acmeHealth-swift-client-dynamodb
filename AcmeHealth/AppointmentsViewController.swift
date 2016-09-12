@@ -22,12 +22,13 @@ class AppointmentsViewController: UITableViewController {
     
     var currentAppointments:[NSDictionary] = []
     
-    // UILabel for "No Appointments
+    /** UILabel for "No Appointments */
     let empty: UILabel = UILabel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        /** Redirect back to login if not authenticated */
         if let authenticated = appAuth.loadState() {
             if authenticated == false {
                 navigationController?.popToRootViewControllerAnimated(true)
@@ -36,6 +37,7 @@ class AppointmentsViewController: UITableViewController {
         self.refreshControl?.addTarget(self, action: #selector(AppointmentsViewController.refresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
     }
     
+    /** Refresh the tableView to show updated data */
     func refresh(sender: AnyObject) {
         loadAppointments((appAuth.authServerState?.lastTokenResponse?.accessToken)!, id: user.id) {
             response, err in
@@ -59,12 +61,11 @@ class AppointmentsViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    // MARK: - Table view data source
-
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
 
+    /** Creates custom view if NO Appointments */
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if currentAppointments.count == 0 {
             empty.frame = CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height)
@@ -84,7 +85,7 @@ class AppointmentsViewController: UITableViewController {
         }
     }
 
-    
+    /** Format cell with provider image, name, status, and time */
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("appointmentCell", forIndexPath: indexPath)
         let appointment = currentAppointments[indexPath.row] as NSDictionary
@@ -143,7 +144,7 @@ class AppointmentsViewController: UITableViewController {
             }
         }
         
-        // Format Date
+        /** Format Date */
         let startDate = appointment["startTime"] as? String!
         let endDate = appointment["endTime"] as? String!
         let dateFormatter = NSDateFormatter()
@@ -166,6 +167,7 @@ class AppointmentsViewController: UITableViewController {
         return true
     }
     
+    /** Delete an appointment */
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
             

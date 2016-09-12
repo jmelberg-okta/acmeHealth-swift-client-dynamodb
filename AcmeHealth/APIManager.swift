@@ -18,7 +18,7 @@
 import Foundation
 import Alamofire
 
-/* Given accessToken and provider/user id -> returns all appointments */
+/** Given accessToken and provider/user id -> returns all appointments */
 func loadAppointments(token: String, id: String, completionHandler: ([NSDictionary]?, NSError?) -> ()){
     let headers = ["Authorization" : "Bearer \(token)",
                    "Accept" :  "application/json"]
@@ -32,7 +32,7 @@ func loadAppointments(token: String, id: String, completionHandler: ([NSDictiona
     }
 }
 
-/* Given accessToken  -> returns all providers */
+/* *Given accessToken  -> returns all providers */
 func loadPhysicians(token: String, completionHandler: ([NSDictionary]?, NSError?) -> ()){
     let headers = ["Authorization" : "Bearer \(token)",
                    "Accept" :  "application/json"]
@@ -45,7 +45,7 @@ func loadPhysicians(token: String, completionHandler: ([NSDictionary]?, NSError?
     }
 }
 
-/* Creates new appointment */
+/** Creates new appointment */
 func createAppointment(params: [String:String!], completionHandler: (NSDictionary?, NSError?) -> ()){
     Alamofire.request(.POST, config.authorizationServerURL + "/appointments", parameters: params)
         .responseJSON { response in
@@ -55,7 +55,7 @@ func createAppointment(params: [String:String!], completionHandler: (NSDictionar
     }
 }
 
-/* Deletes appointment */
+/** Deletes appointment */
 func removeAppointment(token: String, id : String, completionHandler: (Bool?, NSError?) -> ()){
     let headers = ["Authorization" : "Bearer \(token)",
                    "Accept" :  "application/json"]
