@@ -6,8 +6,8 @@ target 'AcmeHealth' do
   use_frameworks!
 
   # Pods for AcmeHealth 
-  pod 'AppAuth'
-  pod 'Alamofire', '~> 3.4'
+  pod 'AppAuth', '~> 0.4.2'
+  pod 'Alamofire', '~> 3.5.1'
   pod 'JSQMessagesViewController', :git => 'https://github.com/jessesquires/JSQMessagesViewController.git', :branch => 'develop'
 end
 
