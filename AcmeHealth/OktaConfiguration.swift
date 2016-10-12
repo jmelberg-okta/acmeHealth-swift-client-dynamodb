@@ -30,10 +30,10 @@ class OktaConfiguration {
     
     init(){
         issuer = "https://example.oktapreview.com"
-        clientID = "Jw1nyzbsNihSuOETY3R1"
+        clientID = "GJv1mKQtUAUbTalBeQLs"
         redirectURI = "com.acmehealth://oauth"
         authorizationServerURL = "http://localhost:8088"
-        authIssuer = "https://example.oktapreview.com/oauth2/aus7xbiefo72YS2QW0h7"
+        authIssuer = "https://example.oktapreview.com/oauth2/aus80l8xhvgeoUgwr0h7"
         idTokenScopes = [
             "openid",
             "profile",

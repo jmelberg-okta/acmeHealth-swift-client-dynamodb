@@ -4,17 +4,17 @@
 
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
-    "512EC7E7FDED77AECD3A591C668F2AA95D974C50" : 0,
-    "91371A19D78094A51344C695621BF3993163597B" : 0
+    "512EC7E7FDED77AECD3A591C668F2AA95D974C50" : 9223372036854775807,
+    "91371A19D78094A51344C695621BF3993163597B" : 9223372036854775807
   },
-  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "B12BA87E-3EF6-456C-990B-96C163B4C4AC",
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "339044D5-C5AD-4F50-A6D8-EC485F7A2D39",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
-    "512EC7E7FDED77AECD3A591C668F2AA95D974C50" : "acmehealth-ios\/",
-    "91371A19D78094A51344C695621BF3993163597B" : "..\/.."
+    "512EC7E7FDED77AECD3A591C668F2AA95D974C50" : "acmehealth-swift\/",
+    "91371A19D78094A51344C695621BF3993163597B" : ".."
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "AcmeHealth",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
-  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "AcmeHealth.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "AcmeHealth.xcodeproj",
   "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:jmelberg\/acmehealth-swift.git",

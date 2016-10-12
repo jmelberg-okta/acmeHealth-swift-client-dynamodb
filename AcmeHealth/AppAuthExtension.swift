@@ -207,7 +207,7 @@ class AppAuthExtension: NSObject, OIDAuthStateChangeDelegate {
         }
         
         /** Call /userinfo from discovery document */
-        callUserInfoEndpoint(token!, url: userinfoEndpoint!.absoluteString) {
+        callUserInfoEndpoint(token!, url: userinfoEndpoint!.absoluteString!) {
             response, err in
             completionHandler(response!, nil)
         }
