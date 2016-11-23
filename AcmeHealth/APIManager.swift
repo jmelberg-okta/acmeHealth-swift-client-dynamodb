@@ -25,9 +25,10 @@ func loadAppointments(token: String, id: String, completionHandler: ([NSDictiona
     Alamofire.request(.GET, config.authorizationServerURL + "/appointments/" + id, headers: headers)
         .validate()
         .responseJSON { response in
+            
             if let JSON = response.result.value {
                 // Only pull appointments that match patient ID
-                completionHandler(JSON as? [NSDictionary], nil)
+                completionHandler(JSON[0] as? [NSDictionary], nil)
             }
     }
 }

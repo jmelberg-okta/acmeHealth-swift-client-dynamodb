@@ -26,7 +26,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		08D36EB095FD9E1BF02D1FE7 /* Pods-OpenIDConnectSwift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenIDConnectSwift.release.xcconfig"; path = "Pods/Target Support Files/Pods-OpenIDConnectSwift/Pods-OpenIDConnectSwift.release.xcconfig"; sourceTree = "<group>"; };
 		710124AF1D11BCD9009F420A /* AcmeHealth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AcmeHealth.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		710124B21D11BCD9009F420A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		710124B71D11BCD9009F420A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -47,7 +46,6 @@
 		711BA7AA1D5BE40C000191D8 /* DemoConversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoConversation.swift; sourceTree = "<group>"; };
 		BF92766B7A431267B5F7D386 /* Pods-AcmeHealth.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AcmeHealth.release.xcconfig"; path = "Pods/Target Support Files/Pods-AcmeHealth/Pods-AcmeHealth.release.xcconfig"; sourceTree = "<group>"; };
 		D4F2115040DA5DDAA9217F3D /* Pods_OpenIDConnectSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenIDConnectSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		DAB41A5EFBA638662D974B56 /* Pods-OpenIDConnectSwift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenIDConnectSwift.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OpenIDConnectSwift/Pods-OpenIDConnectSwift.debug.xcconfig"; sourceTree = "<group>"; };
 		DE5B174CD8465CAECCF20A9F /* Pods-AcmeHealth.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AcmeHealth.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AcmeHealth/Pods-AcmeHealth.debug.xcconfig"; sourceTree = "<group>"; };
 		E6D4F61B5FBAE2723B3B4ED4 /* Pods_AcmeHealth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AcmeHealth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -67,8 +65,6 @@
 		32339B293EFBDE1B9CF3EB1E /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				DAB41A5EFBA638662D974B56 /* Pods-OpenIDConnectSwift.debug.xcconfig */,
-				08D36EB095FD9E1BF02D1FE7 /* Pods-OpenIDConnectSwift.release.xcconfig */,
 				DE5B174CD8465CAECCF20A9F /* Pods-AcmeHealth.debug.xcconfig */,
 				BF92766B7A431267B5F7D386 /* Pods-AcmeHealth.release.xcconfig */,
 			);
@@ -239,7 +235,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -380,7 +376,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DE5B174CD8465CAECCF20A9F /* Pods-AcmeHealth.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -399,7 +395,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BF92766B7A431267B5F7D386 /* Pods-AcmeHealth.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";

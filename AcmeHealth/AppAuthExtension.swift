@@ -137,37 +137,31 @@ class AppAuthExtension: NSObject, OIDAuthStateChangeDelegate {
     
     /** Handle custom authorization server authentication -> Returns token for handshake between API */
     func authorizationServerConfig(controller: UIViewController, completionHandler: (Bool?, NSError?) -> ()) {
+        print("****")
         
-        let issuer = NSURL(string: config.authIssuer)
-        OIDAuthorizationService.discoverServiceConfigurationForIssuer(issuer!) {
-            authServerConfig, error in
-            if((authServerConfig == nil)) {
-                print("Error retrieving discovery documement: \(error?.localizedDescription)")
-            }
-            print("Retrieved configuration: \(authServerConfig!)")
-            
-            /** Build Authentication Request for accessToken */
-            let request = OIDAuthorizationRequest(configuration: authServerConfig!,
-                                                  clientId: config.clientID,
-                                                  scopes: config.authorizationServerScopes,
-                                                  redirectURL: NSURL(string: config.redirectURI)!,
-                                                  responseType: OIDResponseTypeCode,
-                                                  additionalParameters: nil)
-            print("Initiating Authorization Server Request: \(request)")
-            
-            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-            
-            appDelegate.currentAuthorizationFlow =
-                OIDAuthState.authStateByPresentingAuthorizationRequest(request, presentingViewController: controller){
-                    authorizationResponse, error in
-                    if(authorizationResponse != nil) {
-                        self.setAuthServerState(authorizationResponse)
-                        completionHandler(true, nil)
-                    } else {
-                        print("Authorization Error: \(error!.localizedDescription)")
-                        self.setAuthServerState(nil)
-                    }
-            }
+        let authz = NSURL(string: config.authServerAuthEndpoint)
+        let tokenendz = NSURL(string: config.authServerTokenEndpoint)
+        
+        /** Build Authentication Request for accessToken */
+        let request = OIDAuthorizationRequest(configuration: OIDServiceConfiguration.init(authorizationEndpoint: authz!, tokenEndpoint: tokenendz!),
+                                              clientId: config.clientID,
+                                              scopes: config.authorizationServerScopes,
+                                              redirectURL: NSURL(string: config.redirectURI)!,
+                                              responseType: OIDResponseTypeCode,
+                                              additionalParameters: nil)
+        print("Initiating Authorization Server Request: \(request)")
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        appDelegate.currentAuthorizationFlow =
+            OIDAuthState.authStateByPresentingAuthorizationRequest(request, presentingViewController: controller){
+                authorizationResponse, error in
+                if(authorizationResponse != nil) {
+                    self.setAuthServerState(authorizationResponse)
+                    completionHandler(true, nil)
+                } else {
+                    print("Authorization Error: \(error!.localizedDescription)")
+                    self.setAuthServerState(nil)
+                }
         }
     }
     

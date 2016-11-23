@@ -173,7 +173,7 @@ class AppointmentsViewController: UITableViewController {
             
             let appointment = currentAppointments[indexPath.row] as NSDictionary
             let accessToken = appAuth.authServerState!.lastTokenResponse?.accessToken
-            removeAppointment(accessToken!, id: "\(appointment["$loki"]!)") {
+            removeAppointment(accessToken!, id: "\(appointment["id"]!)") {
                 response, err in
                 print(response!)
                 self.refresh(self)
