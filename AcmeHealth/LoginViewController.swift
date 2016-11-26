@@ -82,6 +82,7 @@ class LoginViewController: UIViewController {
         
         /** Load appointments from auth server */
         let accessToken = appAuth.authServerState?.lastTokenResponse?.accessToken
+        print("\n\n\(accessToken!)")
         
         loadAppointments(accessToken!, id: newUser.id) {
             response, err in

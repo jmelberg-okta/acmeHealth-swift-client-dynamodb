@@ -25,10 +25,9 @@ func loadAppointments(token: String, id: String, completionHandler: ([NSDictiona
     Alamofire.request(.GET, config.authorizationServerURL + "/appointments/" + id, headers: headers)
         .validate()
         .responseJSON { response in
-            
             if let JSON = response.result.value {
                 // Only pull appointments that match patient ID
-                completionHandler(JSON[0] as? [NSDictionary], nil)
+                completionHandler(JSON["message"] as? [NSDictionary], nil)
             }
     }
 }
@@ -41,14 +40,15 @@ func loadPhysicians(token: String, completionHandler: ([NSDictionary]?, NSError?
         .validate()
         .responseJSON { response in
             if let JSON = response.result.value {
-                completionHandler(JSON as? [NSDictionary], nil)
+                completionHandler(JSON["message"] as? [NSDictionary], nil)
             }
     }
 }
 
 /** Creates new appointment */
 func createAppointment(params: [String:String!], completionHandler: (NSDictionary?, NSError?) -> ()){
-    Alamofire.request(.POST, config.authorizationServerURL + "/appointments", parameters: params)
+    let headers = ["Content-Type": "application/json"]
+    Alamofire.request(.POST, config.authorizationServerURL + "/appointments", headers: headers, parameters: params, encoding: .JSON)
         .responseJSON { response in
             if let JSON = response.result.value {
                 completionHandler(JSON as? NSDictionary, nil)
