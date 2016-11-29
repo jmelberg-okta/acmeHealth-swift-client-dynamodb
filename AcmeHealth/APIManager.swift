@@ -46,10 +46,16 @@ func loadPhysicians(token: String, completionHandler: ([NSDictionary]?, NSError?
 }
 
 /** Creates new appointment */
-func createAppointment(params: [String:String!], completionHandler: (NSDictionary?, NSError?) -> ()){
-    let headers = ["Content-Type": "application/json"]
+func createAppointment(token: String, params: [String:String!], completionHandler: (NSDictionary?, NSError?) -> ()){
+    let headers = [
+        "Content-Type": "application/json",
+        "Authorization" : "Bearer \(token)",
+        "Accept" :  "application/json"
+    ]
+    print(headers)
     Alamofire.request(.POST, config.authorizationServerURL + "/appointments", headers: headers, parameters: params, encoding: .JSON)
         .responseJSON { response in
+            print("Response \(response)")
             if let JSON = response.result.value {
                 completionHandler(JSON as? NSDictionary, nil)
             }
@@ -60,9 +66,11 @@ func createAppointment(params: [String:String!], completionHandler: (NSDictionar
 func removeAppointment(token: String, id : String, completionHandler: (Bool?, NSError?) -> ()){
     let headers = ["Authorization" : "Bearer \(token)",
                    "Accept" :  "application/json"]
+    print("Appt To Delete: \(id)")
     Alamofire.request(.DELETE, config.authorizationServerURL + "/appointments/" + id, headers: headers)
         .validate()
         .responseJSON { response in
+            print(response)
             if response.response?.statusCode == 204 {
                 completionHandler(true, nil)
             }

@@ -35,7 +35,7 @@ class OktaConfiguration {
         clientID = "GJv1mKQtUAUbTalBeQLs"
         redirectURI = "com.acmehealth://oauth"
         //authorizationServerURL = "http://localhost:8088"
-        authorizationServerURL = "https://z12esvqjs7.execute-api.us-east-1.amazonaws.com/dev/"
+        authorizationServerURL = "https://z12esvqjs7.execute-api.us-east-1.amazonaws.com/dev"
         authIssuer = "https://example.oktapreview.com/oauth2/aus80l8xhvgeoUgwr0h7"
         authServerAuthEndpoint = "https://example.oktapreview.com/oauth2/aus8p24lycw4wg8Eg0h7/v1/authorize"
         authServerTokenEndpoint = "https://example.oktapreview.com/oauth2/aus8p24lycw4wg8Eg0h7/v1/token"
@@ -49,7 +49,6 @@ class OktaConfiguration {
         authorizationServerScopes = [
             "appointments:read",
             "appointments:write",
-            "appointments:cancel",
             "providers:read"
         ]
     }

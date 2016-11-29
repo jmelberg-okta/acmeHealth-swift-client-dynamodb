@@ -43,6 +43,8 @@ class RequestAppointmentViewController: UITableViewController, UIPickerViewDataS
     var datePickerHidden = true
     var pickerHidden = true
     
+    let accessToken = appAuth.authServerState!.lastTokenResponse?.accessToken
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         datePickerChanged()
@@ -136,7 +138,7 @@ class RequestAppointmentViewController: UITableViewController, UIPickerViewDataS
             "patientId" : user.id
         ]
         
-        createAppointment(params){
+        createAppointment(self.accessToken!, params: params){
             response, error in
             print(response!)
             
